@@ -287,3 +287,4 @@ C:\Project\EventRescue\obj\Debug\net10.0\refint\EventRescue.dll
 C:\Project\EventRescue\obj\Debug\net10.0\EventRescue.pdb
 C:\Project\EventRescue\obj\Debug\net10.0\EventRescue.genruntimeconfig.cache
 C:\Project\EventRescue\obj\Debug\net10.0\ref\EventRescue.dll
+C:\Project\EventRescue\obj\Debug\net10.0\EventRescue.sourcelink.json

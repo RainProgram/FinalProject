@@ -7,13 +7,13 @@ namespace EventRescue.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string Name { get; set; } = null!;
+        [Required(ErrorMessage = "اسم القسم مطلوب.")]
+        public string Name { get; set; }  = null!;
 
-        [Required]
-        public string Type { get; set; } = null!; // Services / Rentals
+        [Required(ErrorMessage = "نوع القسم رئيسي مطلوب.")]
+        [StringLength(30)]
+        public string Type { get; set; }  = null!; // Services / Rentals
 
-        [Required]
         public string Icon { get; set; } = null!;
 
 

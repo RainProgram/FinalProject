@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EventRescue.Models.Enums;
+
 
 namespace EventRescue.Models
 {
@@ -11,13 +13,14 @@ namespace EventRescue.Models
 
         // ================= بيانات العرض =================
 
-        [Required]
-
+        [Required(ErrorMessage = "يرجى تحديد سعرالخدمة .")]
+        [Range(1, 100000, ErrorMessage = "يرجى إدخال سعر منطقي بين 1 و 100,000 ريال.")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
         public DateTime OfferDate { get; set; } = DateTime.Now;
-
+        public bool IsAccepted { get; set; } = false;
+        
 
         // ================= الطلب =================
 
@@ -32,8 +35,7 @@ namespace EventRescue.Models
 
         [Required]
         public string ProviderId { get; set; } = null!;
-
         [ForeignKey(nameof(ProviderId))]
-        public virtual ApplicationUser? Provider { get; set; }
+        public virtual ApplicationUser? Provider { get; set; } 
     }
 }

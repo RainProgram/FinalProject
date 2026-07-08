@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRescue.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260705054516_InitialCreate")]
+    [Migration("20260708100141_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,6 +33,9 @@ namespace EventRescue.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("AccountType")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
@@ -47,7 +50,15 @@ namespace EventRescue.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsAvailableNow")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsBlocked")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -55,10 +66,6 @@ namespace EventRescue.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -77,13 +84,8 @@ namespace EventRescue.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -107,6 +109,8 @@ namespace EventRescue.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("RegionId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -128,97 +132,12 @@ namespace EventRescue.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Icon = "bi bi-cup-hot-fill",
-                            Name = "قهوجي أو قهوجية",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Icon = "bi bi-person-heart-fill",
-                            Name = "مقدمات ضيافة",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Icon = "bi bi-stars",
-                            Name = "عاملة تنظيف",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Icon = "bi bi-tools",
-                            Name = "فني إصلاح أثاث",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Icon = "bi bi-flower1",
-                            Name = "منسق ورد",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Icon = "bi bi-camera-fill",
-                            Name = "مصور مناسبات",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Icon = "bi bi-egg-fried",
-                            Name = "شيف منزلي",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Icon = "bi bi-truck",
-                            Name = "سائق توصيل",
-                            Type = "Services"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Icon = "bi bi-grid-3x3-gap-fill",
-                            Name = "كراسي وطاولات",
-                            Type = "Rentals"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Icon = "bi bi-house-heart-fill",
-                            Name = "كنب",
-                            Type = "Rentals"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Icon = "bi bi-house",
-                            Name = "خيام",
-                            Type = "Rentals"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Icon = "bi bi-thermometer-half",
-                            Name = "سخانات ومبردات",
-                            Type = "Rentals"
-                        });
                 });
 
             modelBuilder.Entity("EventRescue.Models.EventRequest", b =>
@@ -239,31 +158,34 @@ namespace EventRescue.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Status")
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -271,7 +193,9 @@ namespace EventRescue.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("RegionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("EventRequests");
                 });
@@ -287,6 +211,9 @@ namespace EventRescue.Migrations
                     b.Property<int>("EventRequestId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OfferDate")
                         .HasColumnType("datetime2");
 
@@ -299,12 +226,30 @@ namespace EventRescue.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProviderId");
+                    b.HasIndex("EventRequestId");
 
-                    b.HasIndex("EventRequestId", "ProviderId")
+                    b.HasIndex("ProviderId", "EventRequestId")
                         .IsUnique();
 
                     b.ToTable("ProviderOffers");
+                });
+
+            modelBuilder.Entity("EventRescue.Models.Region", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -442,12 +387,20 @@ namespace EventRescue.Migrations
 
             modelBuilder.Entity("EventRescue.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("EventRescue.Models.Category", "Category")
+                    b.HasOne("EventRescue.Models.Category", "Specialty")
                         .WithMany("Providers")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Category");
+                    b.HasOne("EventRescue.Models.Region", "Region")
+                        .WithMany("Users")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Region");
+
+                    b.Navigation("Specialty");
                 });
 
             modelBuilder.Entity("EventRescue.Models.EventRequest", b =>
@@ -463,9 +416,15 @@ namespace EventRescue.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EventRescue.Models.ApplicationUser", "Client")
+                    b.HasOne("EventRescue.Models.Region", "Region")
                         .WithMany("EventRequests")
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EventRescue.Models.ApplicationUser", "User")
+                        .WithMany("CreatedRequests")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -473,7 +432,9 @@ namespace EventRescue.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("Client");
+                    b.Navigation("Region");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EventRescue.Models.ProviderOffer", b =>
@@ -550,7 +511,7 @@ namespace EventRescue.Migrations
                 {
                     b.Navigation("AcceptedRequests");
 
-                    b.Navigation("EventRequests");
+                    b.Navigation("CreatedRequests");
 
                     b.Navigation("SuppliedOffers");
                 });
@@ -565,6 +526,13 @@ namespace EventRescue.Migrations
             modelBuilder.Entity("EventRescue.Models.EventRequest", b =>
                 {
                     b.Navigation("ProviderOffers");
+                });
+
+            modelBuilder.Entity("EventRescue.Models.Region", b =>
+                {
+                    b.Navigation("EventRequests");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

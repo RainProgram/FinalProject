@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace EventRescue.Migrations
 {
     /// <inheritdoc />
@@ -34,12 +32,25 @@ namespace EventRescue.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Icon = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Regions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Regions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,11 +79,12 @@ namespace EventRescue.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsAvailableNow = table.Column<bool>(type: "bit", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RegionId = table.Column<int>(type: "int", nullable: false),
+                    AccountType = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
+                    IsAvailableNow = table.Column<bool>(type: "bit", nullable: false),
+                    IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -95,6 +107,12 @@ namespace EventRescue.Migrations
                         name: "FK_AspNetUsers_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Regions_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -190,16 +208,17 @@ namespace EventRescue.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     AcceptedProviderId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    RegionId = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -211,8 +230,8 @@ namespace EventRescue.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EventRequests_AspNetUsers_ClientId",
-                        column: x => x.ClientId,
+                        name: "FK_EventRequests_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -220,6 +239,12 @@ namespace EventRescue.Migrations
                         name: "FK_EventRequests_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EventRequests_Regions_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -232,6 +257,7 @@ namespace EventRescue.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OfferDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsAccepted = table.Column<bool>(type: "bit", nullable: false),
                     EventRequestId = table.Column<int>(type: "int", nullable: false),
                     ProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -250,25 +276,6 @@ namespace EventRescue.Migrations
                         principalTable: "EventRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Id", "Icon", "Name", "Type" },
-                values: new object[,]
-                {
-                    { 1, "bi bi-cup-hot-fill", "قهوجي أو قهوجية", "Services" },
-                    { 2, "bi bi-person-heart-fill", "مقدمات ضيافة", "Services" },
-                    { 3, "bi bi-stars", "عاملة تنظيف", "Services" },
-                    { 4, "bi bi-tools", "فني إصلاح أثاث", "Services" },
-                    { 5, "bi bi-flower1", "منسق ورد", "Services" },
-                    { 6, "bi bi-camera-fill", "مصور مناسبات", "Services" },
-                    { 7, "bi bi-egg-fried", "شيف منزلي", "Services" },
-                    { 8, "bi bi-truck", "سائق توصيل", "Services" },
-                    { 9, "bi bi-grid-3x3-gap-fill", "كراسي وطاولات", "Rentals" },
-                    { 10, "bi bi-house-heart-fill", "كنب", "Rentals" },
-                    { 11, "bi bi-house", "خيام", "Rentals" },
-                    { 12, "bi bi-thermometer-half", "سخانات ومبردات", "Rentals" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -309,6 +316,11 @@ namespace EventRescue.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_RegionId",
+                table: "AspNetUsers",
+                column: "RegionId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -326,20 +338,25 @@ namespace EventRescue.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventRequests_ClientId",
+                name: "IX_EventRequests_RegionId",
                 table: "EventRequests",
-                column: "ClientId");
+                column: "RegionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProviderOffers_EventRequestId_ProviderId",
+                name: "IX_EventRequests_UserId",
+                table: "EventRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProviderOffers_EventRequestId",
                 table: "ProviderOffers",
-                columns: new[] { "EventRequestId", "ProviderId" },
+                column: "EventRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProviderOffers_ProviderId_EventRequestId",
+                table: "ProviderOffers",
+                columns: new[] { "ProviderId", "EventRequestId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProviderOffers_ProviderId",
-                table: "ProviderOffers",
-                column: "ProviderId");
         }
 
         /// <inheritdoc />
@@ -374,6 +391,9 @@ namespace EventRescue.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Regions");
         }
     }
 }

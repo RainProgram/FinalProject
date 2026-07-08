@@ -32,7 +32,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 
 {
-    // تخفيف شروط كلمات المرور لتسهيل التجربة
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 4;
     options.Password.RequireNonAlphanumeric = false;
@@ -49,7 +48,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -58,20 +56,24 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 1. تشغيل الملفات الثابتة (CSS, JS, Bootstrap) في البداية 👈 (مهم جداً!)
 app.UseStaticFiles();
 
-// 2. تفعيل نظام قراءة اللغات بناءً على الإعدادات التي جهزتِها
 var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
 app.UseRequestLocalization(localizationOptions);
 
-// 3. تفعيل التوجيه ونظام الحماية بالترتيب الصحيح
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 4. خريطة التوجيه للموقع
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    await SeedData.InitializeAsync(services);
+}
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

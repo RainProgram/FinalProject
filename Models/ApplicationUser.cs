@@ -1,35 +1,47 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using EventRescue.Models.Enums;
+
 
 namespace EventRescue.Models
 {
     public class ApplicationUser : IdentityUser
     {
         // البيانات الأساسية
+        // الاسم الكامل للمستخدم
+        [Required(ErrorMessage = "الاسم الكامل مطلوب.")]
+        [StringLength(50, ErrorMessage = "الاسم يجب أن لا يتجاوز 50 حرفاً.")]
+        public string FullName { get; set; } = null!; 
 
-        public string Name { get; set; } = null!;
+        // المنطقة/المدينة (جدة، الرياض ...) - علاقة مع جدول Regions
+        [Required(ErrorMessage = "يرجى تحديد المدينة.")]
+        public int RegionId { get; set; }
+        [ForeignKey(nameof(RegionId))]
+        public virtual Region? Region { get; set; }
 
-        public string Role { get; set; } = null!;
+        // نوع الحساب: مستفيد أو مزود خدمة (يحدد عند التسجيل)
+        [Required(ErrorMessage = "يرجى اختيار نوع الحساب.")]
+        public UserType AccountType { get; set; }
 
-        public string Region { get; set; } = null!;
-
-        public bool IsAvailableNow { get; set; }
-
-
-        // تخصص المزود
-
+       // تخصص مزود الخدمة: حقل مباشر يشير لقسم واحد فقط .
         public int? CategoryId { get; set; }
-
         [ForeignKey(nameof(CategoryId))]
-        public virtual Category? Category { get; set; }
+        public virtual Category? Specialty { get; set; }
+
+        // متاح حالياً
+        public bool IsAvailableNow { get; set; } = true;
+
+        //حالة الحظر 
+        public bool IsBlocked { get; set; } = false;
 
 
         // ================= العلاقات =================
 
 
         // الطلبات التي أنشأها العميل
-        public virtual ICollection<EventRequest> EventRequests { get; set; }
-            = new List<EventRequest>();
+        public virtual ICollection<EventRequest> CreatedRequests { get; set; }
+        = new List<EventRequest>();
 
 
         // العروض التي قدمها المزود

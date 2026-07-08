@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EventRescue.Models.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace EventRescue.Models
 {
@@ -11,10 +13,10 @@ namespace EventRescue.Models
         // ================= العميل =================
 
         [Required]
-        public string ClientId { get; set; } = null!;
+        public string UserId { get; set; } = null!;
 
-        [ForeignKey(nameof(ClientId))]
-        public virtual ApplicationUser? Client { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual ApplicationUser? User { get; set; }
 
 
         // ================= القسم =================
@@ -37,23 +39,36 @@ namespace EventRescue.Models
 
         // ================= بيانات الطلب =================
 
-        [Required]
+        [Required(ErrorMessage = "عنوان المناسبة أو الطلب مطلوب.")]
+        [StringLength(50, ErrorMessage = "العنوان طويل جداً.")]
+        public string Title { get; set; } = null!;
+
+        [Required(ErrorMessage = "يرجى كتابة تفاصيل ووصف الطلب.")]
+        [StringLength(500, ErrorMessage = "الوصف لا يمكن أن يتجاوز 500 حرف.")]
         public string Description { get; set; } = null!;
 
-        [Required]
-        public string ImagePath { get; set; } = null!;
 
-        [Required]
-        public string Region { get; set; } = null!;
+        [Required(ErrorMessage = "المدينة مطلوبة لتحديد مكان المناسبة.")]
+        public int RegionId { get; set; }
+        [ForeignKey(nameof(RegionId))]
+         public virtual Region? Region { get; set; }
 
-        [Required]
-        public string Address { get; set; } = null!;
 
+        [Required(ErrorMessage = "يرجى كتابة اسم الحي.")]
+        public string Address { get; set; } = null!; //الحي
+
+        
+        [Required(ErrorMessage = "يرجى تحديد تاريخ المناسبة.")]
         public DateTime EventDate { get; set; }
 
-        public string Status { get; set; } = "Pending";
-
+        public EventStatus Status { get; set; } = EventStatus.Pending; // حالة الطلب : مكتمل, متاح 
+       
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public string? ImagePath { get; set; } 
+        
+        [NotMapped]
+        public IFormFile? ImageFile {get ; set ;} 
 
 
         // ================= العلاقات =================
