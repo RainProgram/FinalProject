@@ -1,8 +1,550 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "الرئيسية";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        background: #f3f6fb;
+    }
+
+    .home-page {
+        direction: rtl;
+        color: #111827;
+    }
+
+    .hero-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at top left, rgba(59, 130, 246, 0.35), transparent 35%),
+            radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.25), transparent 35%),
+            linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0f172a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 60px 45px;
+        color: white;
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 17px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #bfdbfe;
+        font-weight: 700;
+        backdrop-filter: blur(10px);
+    }
+
+    .hero-title {
+        font-size: 3.1rem;
+        line-height: 1.45;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #ffffff;
+    }
+
+    .hero-title .highlight {
+        color: #60a5fa;
+    }
+
+    .hero-text {
+        font-size: 1.12rem;
+        line-height: 2;
+        color: #cbd5e1;
+        max-width: 680px;
+    }
+
+    .hero-actions .btn {
+        border-radius: 999px;
+        padding: 13px 28px;
+        font-weight: 800;
+    }
+
+    .hero-actions .btn-light {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    }
+
+    .hero-actions .btn-light:hover {
+        background: white;
+        color: #0f172a;
+    }
+
+    .action-panel {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        border-radius: 30px;
+        padding: 28px;
+        box-shadow: 0 28px 65px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(16px);
+    }
+
+    .action-panel-inner {
+        background: rgba(255, 255, 255, 0.97);
+        color: #111827;
+        border-radius: 26px;
+        padding: 24px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+    }
+
+    .panel-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #2563eb, #38bdf8);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+    }
+
+    .start-badge {
+        background: #e0f2fe;
+        color: #0369a1;
+        border-radius: 999px;
+        padding: 7px 14px;
+        font-size: 0.85rem;
+        font-weight: 800;
+    }
+
+    .guide-item {
+        display: flex;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .guide-item:last-child {
+        border-bottom: 0;
+    }
+
+    .guide-number {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        flex-shrink: 0;
+    }
+
+    .service-mini {
+        background: #f8fafc;
+        border: 1px solid #e5eaf3;
+        color: #334155;
+        border-radius: 999px;
+        padding: 8px 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 4px;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .service-mini i {
+        color: #2563eb;
+    }
+
+    .section-title {
+        font-weight: 900;
+        letter-spacing: -0.6px;
+        color: #111827;
+    }
+
+    .service-card,
+    .step-card {
+        height: 100%;
+        background: #ffffff;
+        border: 1px solid #e5eaf3;
+        border-radius: 26px;
+        padding: 26px;
+        transition: 0.22s ease;
+        box-shadow: 0 16px 35px rgba(15, 23, 42, 0.05);
+    }
+
+    .service-card:hover,
+    .step-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 24px 55px rgba(37, 99, 235, 0.14);
+        border-color: #bfdbfe;
+    }
+
+    .service-card i {
+        width: 58px;
+        height: 58px;
+        border-radius: 19px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+    }
+
+    .step-number {
+        width: 44px;
+        height: 44px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #2563eb, #0ea5e9);
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        margin-bottom: 16px;
+        box-shadow: 0 12px 25px rgba(37, 99, 235, 0.25);
+    }
+
+    .mini-panel {
+        border-radius: 30px;
+        background:
+            radial-gradient(circle at left, rgba(96, 165, 250, 0.35), transparent 35%),
+            linear-gradient(135deg, #1e293b, #020617);
+        color: #ffffff;
+        padding: 34px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+    }
+
+    .mini-panel-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-wrapper {
+            padding: 38px 22px;
+            border-radius: 26px;
+        }
+
+        .hero-title {
+            font-size: 2.1rem;
+        }
+
+        .action-panel {
+            margin-top: 28px;
+        }
+    }
+</style>
+
+<div class="container home-page mt-5 mb-5">
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center rounded-4">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <section class="hero-wrapper mb-5">
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+
+                <div class="hero-badge mb-4">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    منصة حلول عاجلة قبل المناسبات
+                </div>
+
+                <h1 class="hero-title mb-4">
+                    عطل مفاجئ؟
+                    <br />
+                    لا تخليه يربك <span class="highlight">مناسبتك</span>
+                </h1>
+
+                <p class="hero-text mb-4">
+                    تساعدك منصة <span dir="ltr">EventRescue</span> على إرسال طلب سريع عند حدوث مشكلة قبل المناسبة،
+                    مثل إصلاح الكنب، الإنارة، الخياطة، النجارة، السباكة أو المكيفات،
+                    ليصل طلبك إلى مزودي الخدمة المناسبين في مدينتك.
+                </p>
+
+                <div class="hero-actions d-flex flex-wrap gap-2">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="EventRequests" asp-action="Create" class="btn btn-primary btn-lg">
+                            <i class="bi bi-calendar-plus"></i>
+                            عندي مناسبة
+                        </a>
+
+                        <a asp-controller="EventRequests" asp-action="MyRequests" class="btn btn-light btn-lg">
+                            <i class="bi bi-list-check"></i>
+                            طلباتي
+                        </a>
+
+                        <a asp-controller="Account" asp-action="Profile" class="btn btn-light btn-lg">
+                            <i class="bi bi-person-circle"></i>
+                            ملفي الشخصي
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus"></i>
+                            إنشاء حساب
+                        </a>
+
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            تسجيل الدخول
+                        </a>
+                    }
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+                <div class="action-panel">
+                    <div class="action-panel-inner">
+
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="panel-icon">
+                                <i class="bi bi-clipboard-check-fill"></i>
+                            </div>
+
+                            <span class="start-badge">
+                                ابدء بخطوات واضحة
+                            </span>
+                        </div>
+
+                        <h4 class="fw-bold mb-2">
+                            كيف ترفع طلبًا ناجحًا؟
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            كلما كان الطلب واضحًا، أصبح أسهل على مزود الخدمة فهم المشكلة وتقديم المساعدة المناسبة.
+                        </p>
+
+                        <div class="guide-item">
+                            <div class="guide-number">1</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">اختار نوع الخدمة</h6>
+                                <p class="text-muted mb-0 small">
+                                    مثل إصلاح أثاث، إنارة، خياطة، سباكة أو مكيفات.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <div class="guide-number">2</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">اكتب تفاصيل المشكلة</h6>
+                                <p class="text-muted mb-0 small">
+                                    اذكر ماذا حدث، ومتى تحتاج الخدمة، وأي ملاحظات مهمة.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <div class="guide-number">3</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">أرفق صورة إن وجدت</h6>
+                                <p class="text-muted mb-0 small">
+                                    الصورة تساعد مزود الخدمة على تقييم الحالة بشكل أسرع.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-2">
+                                خدمات شائعة:
+                            </h6>
+
+                            <span class="service-mini">
+                                <i class="bi bi-house-gear"></i>
+                                إصلاح أثاث
+                            </span>
+
+                            <span class="service-mini">
+                                <i class="bi bi-lightbulb"></i>
+                                إنارة
+                            </span>
+
+                            <span class="service-mini">
+                                <i class="bi bi-scissors"></i>
+                                خياطة
+                            </span>
+
+                            <span class="service-mini">
+                                <i class="bi bi-wrench-adjustable"></i>
+                                سباكة
+                            </span>
+                        </div>
+
+                        <div class="mt-4">
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="EventRequests" asp-action="Create" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+                                    <i class="bi bi-plus-circle"></i>
+                                    إنشاء طلب الآن
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+                                    <i class="bi bi-person-plus"></i>
+                                    إنشاء حساب للبدء
+                                </a>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="section-title mb-1">
+                    الخدمات الأكثر احتياجًا قبل المناسبات
+                </h2>
+                <p class="text-muted mb-0">
+                    ركزنا على الأعطال والمشاكل التي تسبب توترًا قبل موعد المناسبة.
+                </p>
+            </div>
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="EventRequests" asp-action="Create" class="btn btn-outline-primary rounded-pill">
+                    إرسال طلب الآن
+                </a>
+            }
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4 col-lg-3">
+                <div class="service-card">
+                    <i class="bi bi-house-gear"></i>
+                    <h5 class="fw-bold mt-3">إصلاح الأثاث</h5>
+                    <p class="text-muted mb-0">
+                        كنب، طاولات، كراسي أو قطع تحتاج إصلاح سريع.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="service-card">
+                    <i class="bi bi-lightbulb"></i>
+                    <h5 class="fw-bold mt-3">الإنارة</h5>
+                    <p class="text-muted mb-0">
+                        إصلاح أو ترتيب مشاكل الإضاءة قبل المناسبة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="service-card">
+                    <i class="bi bi-scissors"></i>
+                    <h5 class="fw-bold mt-3">الخياطة</h5>
+                    <p class="text-muted mb-0">
+                        تعديلات عاجلة للستائر، المفارش أو الأقمشة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="service-card">
+                    <i class="bi bi-wrench-adjustable"></i>
+                    <h5 class="fw-bold mt-3">السباكة والمكيفات</h5>
+                    <p class="text-muted mb-0">
+                        معالجة أعطال منزلية مؤثرة قبل حضور الضيوف.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title mb-1">
+                كيف تعمل المنصة؟
+            </h2>
+            <p class="text-muted mb-0">
+                خطوات واضحة من بداية الطلب حتى متابعة حالته.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h5 class="fw-bold">إنشاء الطلب</h5>
+                    <p class="text-muted mb-0">
+                        يختار العميل نوع الخدمة، يكتب وصف المشكلة، يحدد العنوان، ويرفع صورة عند الحاجة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h5 class="fw-bold">ظهور الطلب للمزودين</h5>
+                    <p class="text-muted mb-0">
+                        يظهر الطلب لمزودي الخدمة المناسبين حسب المدينة والتخصص.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h5 class="fw-bold">متابعة الحالة</h5>
+                    <p class="text-muted mb-0">
+                        يستطيع العميل متابعة الطلب من صفحة طلباتي ومعرفة حالته بسهولة.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="mini-panel">
+        <div class="mini-panel-content">
+            <div class="row align-items-center">
+
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <h3 class="fw-bold mb-2">
+                        جاهز تبدأ طلبك؟
+                    </h3>
+
+                    <p class="text-white-50 mb-0">
+                        أنشئ طلبًا واضحًا مع صورة وتفاصيل، ليسهل على مزود الخدمة فهم المشكلة وتقديم المساعدة المناسبة.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-start text-center">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="EventRequests" asp-action="Create" class="btn btn-primary btn-lg rounded-pill px-4">
+                            عندي مناسبة
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg rounded-pill px-4">
+                            إنشاء حساب الآن
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </section>
+
 </div>

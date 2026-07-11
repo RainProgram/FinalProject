@@ -1,0 +1,532 @@
+@model EventRescue.Models.EventRequest
+@using EventRescue.Models.Enums
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+
+    string statusText = Model.Status switch
+    {
+        EventStatus.Pending => "متاح للعروض",
+        EventStatus.Accepted => "مقبول",
+        EventStatus.Completed => "مكتمل",
+        EventStatus.Canceled => "ملغي",
+        _ => "غير معروف"
+    };
+
+    string statusClass = Model.Status switch
+    {
+        EventStatus.Pending => "status-pending",
+        EventStatus.Accepted => "status-accepted",
+        EventStatus.Completed => "status-completed",
+        EventStatus.Canceled => "status-canceled",
+        _ => "status-pending"
+    };
+
+    string statusIcon = Model.Status switch
+    {
+        EventStatus.Pending => "bi-hourglass-split",
+        EventStatus.Accepted => "bi-check2-circle",
+        EventStatus.Completed => "bi-patch-check",
+        EventStatus.Canceled => "bi-x-circle",
+        _ => "bi-info-circle"
+    };
+}
+
+<style>
+    body {
+        background:
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.14), transparent 30%),
+            #8396c89f;
+    }
+
+    .details-dashboard {
+        direction: rtl;
+        color: #e5e7eb;
+    }
+
+    .dark-panel {
+        background: rgba(15, 23, 42, 0.573);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        border-radius: 30px;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+        backdrop-filter: blur(16px);
+    }
+
+    .details-hero {
+        padding: 34px;
+        margin-bottom: 24px;
+        background:
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.30), transparent 36%),
+            linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+        overflow: hidden;
+        position: relative;
+    }
+
+    .details-hero::before {
+        content: "";
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.22);
+        left: -80px;
+        bottom: -90px;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(96, 165, 250, 0.15);
+        border: 1px solid rgba(96, 165, 250, 0.25);
+        color: #bfdbfe;
+        border-radius: 999px;
+        padding: 8px 15px;
+        font-weight: 800;
+        margin-bottom: 16px;
+    }
+
+    .hero-title {
+        color: white;
+        font-weight: 900;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    .hero-text {
+        color: #94a3b8;
+        line-height: 1.8;
+        margin-bottom: 0;
+    }
+
+    .details-layout {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .image-panel {
+        overflow: hidden;
+    }
+
+    .request-image {
+        width: 100%;
+        height: 430px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .image-placeholder {
+        height: 430px;
+        background:
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), transparent 40%),
+            rgba(30, 41, 59, 0.82);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 4rem;
+    }
+
+    .image-caption {
+        padding: 18px 22px;
+        border-top: 1px solid rgba(148, 163, 184, 0.14);
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+
+    .content-panel {
+        padding: 28px;
+    }
+
+    .section-title {
+        color: white;
+        font-weight: 900;
+        margin-bottom: 14px;
+    }
+
+    .description-box {
+        background: rgba(30, 41, 59, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 22px;
+        padding: 20px;
+        color: #cbd5e1;
+        line-height: 1.9;
+        margin-bottom: 22px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .info-box {
+        background: rgba(30, 41, 59, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 20px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .info-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: rgba(37, 99, 235, 0.16);
+        color: #60a5fa;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.2rem;
+    }
+
+    .info-label {
+        color: #94a3b8;
+        font-size: 0.88rem;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: white;
+        font-weight: 900;
+        word-break: break-word;
+    }
+
+    .status-pill {
+        border-radius: 999px;
+        padding: 8px 15px;
+        font-size: 0.88rem;
+        font-weight: 900;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .status-pending {
+        background: rgba(251, 146, 60, 0.16);
+        color: #fdba74;
+    }
+
+    .status-accepted {
+        background: rgba(14, 165, 233, 0.16);
+        color: #7dd3fc;
+    }
+
+    .status-completed {
+        background: rgba(34, 197, 94, 0.16);
+        color: #86efac;
+    }
+
+    .status-canceled {
+        background: rgba(239, 68, 68, 0.16);
+        color: #fca5a5;
+    }
+
+    .actions-panel {
+        background: rgba(30, 41, 59, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 22px;
+        padding: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .rounded-action {
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 10px 22px;
+    }
+
+    .muted {
+        color: #94a3b8;
+    }
+
+    @@media (max-width: 992px) {
+        .details-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .request-image,
+        .image-placeholder {
+            height: 320px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .details-hero {
+            padding: 26px;
+        }
+
+        .content-panel {
+            padding: 22px;
+        }
+    }
+</style>
+
+<div class="container details-dashboard mt-5 mb-5">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success rounded-4 text-center">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger rounded-4 text-center">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <section class="dark-panel details-hero">
+        <div class="hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="hero-badge">
+                        <i class="bi bi-file-earmark-text"></i>
+                        تفاصيل الطلب
+                    </div>
+
+                    <h1 class="hero-title">
+                        @Model.Title
+                    </h1>
+
+                    <p class="hero-text">
+                        مراجعة كاملة لبيانات الطلب، الخدمة المطلوبة، الموقع، والحالة الحالية.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-start text-center mt-4 mt-lg-0">
+                    <span class="status-pill @statusClass">
+                        <i class="bi @statusIcon"></i>
+                        @statusText
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="details-layout">
+
+        <aside class="dark-panel image-panel">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath"
+                     class="request-image"
+                     alt="صورة الطلب" />
+            }
+            else
+            {
+                <div class="image-placeholder">
+                    <i class="bi bi-image"></i>
+                </div>
+            }
+
+            <div class="image-caption">
+                <i class="bi bi-info-circle text-info"></i>
+                صورة الطلب تساعد مزود الخدمة على فهم المشكلة بشكل أسرع.
+            </div>
+        </aside>
+
+        <main class="dark-panel content-panel">
+
+            <h4 class="section-title">
+                وصف الطلب
+            </h4>
+
+            <div class="description-box">
+                @Model.Description
+            </div>
+
+            <h4 class="section-title">
+                بيانات الطلب
+            </h4>
+
+            <div class="info-grid">
+
+                <div class="info-box">
+                    <span class="info-icon">
+                        <i class="bi bi-tools"></i>
+                    </span>
+
+                    <div>
+                        <div class="info-label">نوع الخدمة</div>
+                        <div class="info-value">
+                            @(Model.Category?.Name ?? "غير محدد")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </span>
+
+                    <div>
+                        <div class="info-label">المدينة</div>
+                        <div class="info-value">
+                            @(Model.Region?.Name ?? "غير محددة")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </span>
+
+                    <div>
+                        <div class="info-label">تاريخ المناسبة</div>
+                        <div class="info-value">
+                            @Model.EventDate.ToString("yyyy/MM/dd")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-icon">
+                        <i class="bi bi-clock"></i>
+                    </span>
+
+                    <div>
+                        <div class="info-label">تاريخ إرسال الطلب</div>
+                        <div class="info-value">
+                            @Model.CreatedAt.ToString("yyyy/MM/dd")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="grid-column: 1 / -1;">
+                    <span class="info-icon">
+                        <i class="bi bi-house-door"></i>
+                    </span>
+
+                    <div>
+                        <div class="info-label">العنوان / الحي</div>
+                        <div class="info-value">
+                            @Model.Address
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            @* ================== قسم العروض المقدمة (Services Module) ================== *@
+
+            @if (Model.Status == EventStatus.Accepted && Model.AcceptedProvider != null)
+            {
+                @* بعد الموافقة: نعرض معلومات التواصل المباشر مع الفني المعتمد *@
+                <h4 class="section-title">الفني المعتمد</h4>
+
+                <div class="info-box mb-4" style="border-color: rgba(34, 197, 94, 0.35);">
+                    <span class="info-icon" style="background: rgba(34, 197, 94, 0.16); color: #86efac;">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </span>
+                    <div>
+                        <div class="info-label">تم اعتماد</div>
+                        <div class="info-value">@Model.AcceptedProvider.FullName</div>
+                        <div class="mt-1">
+                            <a href="tel:@Model.AcceptedProvider.PhoneNumber" class="text-info" dir="ltr">
+                                <i class="bi bi-telephone-fill"></i> @(Model.AcceptedProvider.PhoneNumber ?? "لم يسجل رقم جوال")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (Model.Status == EventStatus.Pending)
+            {
+                <h4 class="section-title">
+                    العروض المقدمة (@Model.ProviderOffers.Count)
+                </h4>
+
+                @if (!Model.ProviderOffers.Any())
+                {
+                    <div class="description-box text-center">
+                        <i class="bi bi-hourglass"></i>
+                        لا توجد عروض بعد — سيظهر طلبك للفنيين المتخصصين في مدينتك
+                    </div>
+                }
+                else
+                {
+                    @foreach (var offer in Model.ProviderOffers.OrderBy(o => o.Price))
+                    {
+                        <div class="info-box mb-3">
+                            <span class="info-icon">
+                                <i class="bi bi-person-badge"></i>
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="info-value">@(offer.Provider?.FullName ?? "فني")</div>
+                                <div class="info-label mt-1">
+                                    <i class="bi bi-cash-stack"></i> @offer.Price ريال
+                                    &nbsp;•&nbsp;
+                                    <i class="bi bi-clock"></i> @offer.OfferDate.ToString("yyyy/MM/dd — hh:mm tt")
+                                </div>
+                            </div>
+                            <form asp-controller="Providers" asp-action="AcceptOffer" method="post"
+                                  onsubmit="return confirm('اعتماد هذا الفني وقبول عرضه؟');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="offerId" value="@offer.Id" />
+                                <button type="submit" class="btn btn-success rounded-action">
+                                    <i class="bi bi-check2-circle"></i> موافقة
+                                </button>
+                            </form>
+                        </div>
+                    }
+                }
+            }
+
+            <div class="actions-panel">
+                <a asp-action="MyRequests" class="btn btn-outline-light rounded-action">
+                    <i class="bi bi-arrow-right"></i>
+                    العودة إلى طلباتي
+                </a>
+
+                <div class="d-flex flex-wrap gap-2">
+                    @if (Model.Status == EventStatus.Pending)
+                    {
+                        <form asp-action="Cancel"
+                              asp-route-id="@Model.Id"
+                              method="post"
+                              onsubmit="return confirm('هل أنت متأكد من إلغاء هذا الطلب؟');">
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-outline-danger rounded-action">
+                                <i class="bi bi-x-circle"></i>
+                                إلغاء الطلب
+                            </button>
+                        </form>
+                    }
+
+                    <a asp-action="Create" class="btn btn-primary rounded-action">
+                        <i class="bi bi-plus-circle"></i>
+                        طلب جديد
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
