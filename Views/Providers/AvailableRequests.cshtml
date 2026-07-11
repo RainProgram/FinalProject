@@ -3,88 +3,141 @@
 @{
     ViewData["Title"] = "الطلبات المتاحة";
     var currentProviderId = ViewBag.CurrentProviderId as string;
+
+    // إحصائيات سريعة للهيرو
+    var myOffersCount = Model.Count(r => r.ProviderOffers.Any(o => o.ProviderId == currentProviderId));
+    var emergencyCount = Model.Count(r => r.EventDate <= DateTime.Now.AddHours(24));
 }
 
-<div class="container py-4">
+<div class="container er-page mt-4 mb-5">
 
-    <h3 class="mb-1"><i class="bi bi-broadcast text-danger"></i> رادار الطلبات المتاحة</h3>
-    <p class="text-muted mb-4">الطلبات في مدينتك وضمن تخصصك فقط — الأقرب موعداً أولاً</p>
+    @* ================== الهيرو: نفس هوية الصفحة الرئيسية ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="er-badge">
+                        <i class="bi bi-broadcast"></i>
+                        رادار المزود
+                    </div>
+                    <h1 class="er-title">الطلبات المتاحة في مدينتك</h1>
+                    <p class="er-subtitle mb-0">
+                        طلبات تخصصك فقط، مرتبة بالأقرب موعداً — قدم عرضك وكن أول من يفزع.
+                    </p>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-primary">@Model.Count</div>
+                                <div class="er-muted small">متاح</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-info">@myOffersCount</div>
+                                <div class="er-muted small">عروضي</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-danger">@emergencyCount</div>
+                                <div class="er-muted small">عاجل</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    @* رسائل النجاح والخطأ بعد تقديم العرض *@
+    @* ================== رسائل النجاح والخطأ ================== *@
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show rounded-4">
             <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="alert alert-danger alert-dismissible fade show rounded-4">
             <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
+    @* ================== حالة عدم وجود طلبات ================== *@
     @if (!Model.Any())
     {
-        <div class="alert alert-light border text-center py-5">
-            <i class="bi bi-inbox display-4 text-muted d-block mb-2"></i>
-            لا توجد طلبات متاحة حالياً في مدينتك
+        <div class="er-card er-card-body text-center py-5">
+            <span class="er-soft-icon mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                <i class="bi bi-inbox"></i>
+            </span>
+            <h5 class="fw-bold">لا توجد طلبات متاحة حالياً</h5>
+            <p class="er-muted mb-0">سيظهر هنا أي طلب جديد في مدينتك يطابق تخصصك</p>
         </div>
     }
 
+    @* ================== بطاقات الطلبات ================== *@
     <div class="row g-4">
         @foreach (var request in Model)
         {
-            // هل قدمتُ أنا عرضاً على هذا الطلب من قبل؟
             var myOffer = request.ProviderOffers
                 .FirstOrDefault(o => o.ProviderId == currentProviderId);
 
-            // فزعة عاجلة: المناسبة خلال أقل من 24 ساعة
             var isEmergency = request.EventDate <= DateTime.Now.AddHours(24);
 
-            <div class="col-lg-6">
-                <div class="card h-100 shadow-sm">
+            <div class="col-xl-6">
+                <div class="er-card h-100 overflow-hidden">
 
                     @if (!string.IsNullOrEmpty(request.ImagePath))
                     {
-                        <img src="@request.ImagePath" class="card-img-top" alt="صورة الطلب"
-                             style="height: 180px; object-fit: cover;" />
+                        <img src="@request.ImagePath" alt="صورة الطلب"
+                             style="width: 100%; height: 190px; object-fit: cover;" />
                     }
 
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-primary">
-                                <i class="@request.Category?.Icon"></i> @request.Category?.Name
-                            </span>
+                    <div class="er-card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="er-soft-icon">
+                                    <i class="@request.Category?.Icon"></i>
+                                </span>
+                                <strong>@request.Category?.Name</strong>
+                            </div>
                             @if (isEmergency)
                             {
-                                <span class="badge bg-danger">
+                                <span class="er-status er-status-canceled">
                                     <i class="bi bi-alarm-fill"></i> فزعة عاجلة
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="er-status er-status-pending">
+                                    <i class="bi bi-hourglass-split"></i> متاح للعروض
                                 </span>
                             }
                         </div>
 
-                        <h5 class="card-title">@request.Title</h5>
-                        <p class="card-text text-muted">@request.Description</p>
+                        <h5 class="fw-bold">@request.Title</h5>
+                        <p class="er-muted">@request.Description</p>
 
-                        <ul class="list-unstyled small text-muted mb-3">
-                            <li><i class="bi bi-geo-alt-fill"></i> @request.Region?.Name — @request.Address</li>
-                            <li><i class="bi bi-calendar-event"></i> @request.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</li>
-                            <li><i class="bi bi-people-fill"></i> عدد العروض المقدمة: @request.ProviderOffers.Count</li>
-                        </ul>
+                        <div class="d-flex flex-wrap gap-3 small er-muted mb-3">
+                            <span><i class="bi bi-geo-alt-fill text-primary"></i> @request.Region?.Name — @request.Address</span>
+                            <span><i class="bi bi-calendar-event text-primary"></i> @request.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</span>
+                            <span><i class="bi bi-people-fill text-primary"></i> @request.ProviderOffers.Count عروض</span>
+                        </div>
 
                         @if (myOffer != null)
                         {
-                            <div class="alert alert-info mb-0 py-2">
+                            <div class="alert alert-info rounded-4 py-2 mb-0">
                                 <i class="bi bi-hourglass-split"></i>
                                 قدمت عرضاً بسعر <strong>@myOffer.Price ريال</strong> — بانتظار رد العميل
                             </div>
                         }
                         else
                         {
-                            @* فورم تقديم العرض: يرسل رقم الطلب (مخفي) + السعر إلى SendOffer *@
                             <form asp-controller="Providers" asp-action="SendOffer" method="post">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="eventRequestId" value="@request.Id" />
@@ -98,6 +151,7 @@
                                 </div>
                             </form>
                         }
+
                     </div>
                 </div>
             </div>

@@ -6,111 +6,139 @@
     bool isAvailableNow = ViewBag.IsAvailableNow;
 }
 
-<div class="container py-4 er-page">
+<div class="container er-page mt-4 mb-5">
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-1">
-        <h3 class="mb-0">
-            <i class="bi bi-alarm-fill text-danger"></i> رادار الطوارئ الحي
-        </h3>
-
-        @* زر التوفر: الفني يعلن أنه جاهز للفزعات أو لا *@
-        <form asp-controller="Emergency" asp-action="ToggleAvailability" method="post">
-            @Html.AntiForgeryToken()
-            @if (isAvailableNow)
-            {
-                <button type="submit" class="btn btn-success er-btn">
-                    <i class="bi bi-lightning-charge-fill"></i> متاح الآن للفزعة — اضغط للإيقاف
-                </button>
-            }
-            else
-            {
-                <button type="submit" class="btn btn-outline-secondary er-btn">
-                    <i class="bi bi-moon"></i> غير متاح — اضغط للتفعيل
-                </button>
-            }
-        </form>
-    </div>
-
-    <p class="er-muted mb-4">كل طلبات مدينتك — بجميع التخصصات — التي موعدها خلال أقل من 24 ساعة، الأعجل أولاً</p>
+    @* ================== الهيرو — بنبرة طوارئ حمراء ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="er-badge" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.30); color: #fca5a5;">
+                        <i class="bi bi-alarm-fill"></i>
+                        رادار الطوارئ الحي
+                    </div>
+                    <h1 class="er-title">فزعات اليوم في مدينتك</h1>
+                    <p class="er-subtitle mb-0">
+                        كل الطلبات — بجميع التخصصات — التي موعدها خلال أقل من 24 ساعة، الأعجل أولاً.
+                    </p>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0 text-lg-start text-center">
+                    @* زر التوفر للفزعات *@
+                    <form asp-controller="Emergency" asp-action="ToggleAvailability" method="post">
+                        @Html.AntiForgeryToken()
+                        @if (isAvailableNow)
+                        {
+                            <button type="submit" class="btn btn-success er-btn w-100">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                                متاح الآن للفزعة — اضغط للإيقاف
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-outline-light er-btn w-100">
+                                <i class="bi bi-moon"></i>
+                                غير متاح — اضغط للتفعيل
+                            </button>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show rounded-4">
             <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="alert alert-danger alert-dismissible fade show rounded-4">
             <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
+    @* ================== الوضع هادئ ================== *@
     @if (!Model.Any())
     {
-        <div class="er-card er-card-body text-center er-muted py-5">
-            <i class="bi bi-shield-check d-block display-4 mb-2 text-success"></i>
-            لا توجد طوارئ في مدينتك حالياً — الوضع هادئ
+        <div class="er-card er-card-body text-center py-5">
+            <span class="er-soft-icon mb-3" style="width: 70px; height: 70px; font-size: 2rem; background: #dcfce7; color: #166534;">
+                <i class="bi bi-shield-check"></i>
+            </span>
+            <h5 class="fw-bold">لا توجد طوارئ في مدينتك حالياً</h5>
+            <p class="er-muted mb-0">الوضع هادئ — أي فزعة جديدة بتظهر هنا فوراً</p>
         </div>
     }
 
+    @* ================== بطاقات الفزعات ================== *@
     <div class="row g-4">
         @foreach (var request in Model)
         {
             var myOffer = request.ProviderOffers
                 .FirstOrDefault(o => o.ProviderId == currentProviderId);
 
-            // كم ساعة باقية على المناسبة؟
             var hoursLeft = (int)(request.EventDate - DateTime.Now).TotalHours;
 
-            <div class="col-lg-6">
-                <div class="er-card er-card-body h-100" style="border-right: 4px solid #ef4444;">
+            <div class="col-xl-6">
+                <div class="er-card h-100 overflow-hidden" style="border-right: 4px solid #ef4444;">
 
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge bg-primary">
-                            <i class="@request.Category?.Icon"></i> @request.Category?.Name
-                        </span>
-                        <span class="badge bg-danger">
-                            <i class="bi bi-alarm-fill"></i>
-                            باقي @hoursLeft ساعة تقريباً
-                        </span>
-                    </div>
-
-                    <h5>@request.Title</h5>
-                    <p class="er-muted">@request.Description</p>
-
-                    <ul class="list-unstyled small er-muted mb-3">
-                        <li><i class="bi bi-geo-alt-fill"></i> @request.Region?.Name — @request.Address</li>
-                        <li><i class="bi bi-calendar-event"></i> @request.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</li>
-                        <li><i class="bi bi-people-fill"></i> عدد العروض: @request.ProviderOffers.Count</li>
-                    </ul>
-
-                    @if (myOffer != null)
+                    @if (!string.IsNullOrEmpty(request.ImagePath))
                     {
-                        <div class="alert alert-info mb-0 py-2">
-                            <i class="bi bi-hourglass-split"></i>
-                            قدمت عرضاً بسعر <strong>@myOffer.Price ريال</strong> — بانتظار رد العميل
-                        </div>
+                        <img src="@request.ImagePath" alt="صورة الطلب"
+                             style="width: 100%; height: 190px; object-fit: cover;" />
                     }
-                    else
-                    {
-                        @* نفس أكشن SendOffer من موديول الفني — إعادة استخدام بدل التكرار *@
-                        <form asp-controller="Providers" asp-action="SendOffer" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="eventRequestId" value="@request.Id" />
-                            <div class="input-group">
-                                <span class="input-group-text">ريال</span>
-                                <input type="number" name="price" class="form-control"
-                                       placeholder="سعر عرض الفزعة" min="1" max="100000" step="0.5" required />
-                                <button type="submit" class="btn btn-danger er-btn">
-                                    <i class="bi bi-lightning-charge-fill"></i> فزعة!
-                                </button>
+
+                    <div class="er-card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="er-soft-icon">
+                                    <i class="@request.Category?.Icon"></i>
+                                </span>
+                                <strong>@request.Category?.Name</strong>
                             </div>
-                        </form>
-                    }
+                            <span class="er-status er-status-canceled">
+                                <i class="bi bi-alarm-fill"></i>
+                                باقي @hoursLeft ساعة تقريباً
+                            </span>
+                        </div>
 
+                        <h5 class="fw-bold">@request.Title</h5>
+                        <p class="er-muted">@request.Description</p>
+
+                        <div class="d-flex flex-wrap gap-3 small er-muted mb-3">
+                            <span><i class="bi bi-geo-alt-fill text-danger"></i> @request.Region?.Name — @request.Address</span>
+                            <span><i class="bi bi-calendar-event text-danger"></i> @request.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</span>
+                            <span><i class="bi bi-people-fill text-danger"></i> @request.ProviderOffers.Count عروض</span>
+                        </div>
+
+                        @if (myOffer != null)
+                        {
+                            <div class="alert alert-info rounded-4 py-2 mb-0">
+                                <i class="bi bi-hourglass-split"></i>
+                                قدمت عرضاً بسعر <strong>@myOffer.Price ريال</strong> — بانتظار رد العميل
+                            </div>
+                        }
+                        else
+                        {
+                            <form asp-controller="Providers" asp-action="SendOffer" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="eventRequestId" value="@request.Id" />
+                                <div class="input-group">
+                                    <span class="input-group-text">ريال</span>
+                                    <input type="number" name="price" class="form-control"
+                                           placeholder="سعر عرض الفزعة" min="1" max="100000" step="0.5" required />
+                                    <button type="submit" class="btn btn-danger er-btn">
+                                        <i class="bi bi-lightning-charge-fill"></i> فزعة!
+                                    </button>
+                                </div>
+                            </form>
+                        }
+
+                    </div>
                 </div>
             </div>
         }

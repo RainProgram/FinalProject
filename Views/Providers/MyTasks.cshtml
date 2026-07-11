@@ -4,89 +4,142 @@
 @{
     ViewData["Title"] = "مهامي";
 
-    // نفصل المهام الجارية عن المنتهية (كلها رست على نفس المزود)
     var currentTasks = Model.Where(r => r.Status == EventStatus.Accepted).ToList();
     var archivedTasks = Model.Where(r => r.Status == EventStatus.Completed).ToList();
+
+    // إجمالي أرباحي من المهام المكتملة (مجموع أسعار عروضي المقبولة)
+    var totalEarnings = archivedTasks
+        .SelectMany(r => r.ProviderOffers.Where(o => o.IsAccepted))
+        .Sum(o => o.Price);
 }
 
-<div class="container py-4 er-page">
+<div class="container er-page mt-4 mb-5">
 
-    <h3 class="mb-1"><i class="bi bi-list-check text-success"></i> مهامي</h3>
-    <p class="er-muted mb-4">المهام التي اعتمدك العميل فيها — الجارية أولاً ثم أرشيف أعمالك</p>
+    @* ================== الهيرو ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="er-badge">
+                        <i class="bi bi-list-check"></i>
+                        لوحة مهامي
+                    </div>
+                    <h1 class="er-title">مهامك ومسيرتك</h1>
+                    <p class="er-subtitle mb-0">
+                        المهام التي اعتمدك العميل فيها — أنجزها وانقلها لأرشيف أعمالك.
+                    </p>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-info">@currentTasks.Count</div>
+                                <div class="er-muted small">جارية</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-success">@archivedTasks.Count</div>
+                                <div class="er-muted small">مكتملة</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="er-stat py-3">
+                                <div class="er-stat-number text-primary">@totalEarnings</div>
+                                <div class="er-muted small">ريال أرباح</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show rounded-4">
             <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="alert alert-danger alert-dismissible fade show rounded-4">
             <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
     @* ================== المهام الجارية ================== *@
-    <h5 class="mt-4 mb-3">
+    <h5 class="fw-bold mb-3">
         <i class="bi bi-lightning-charge-fill text-warning"></i>
         المهام الجارية
-        <span class="badge bg-primary rounded-pill">@currentTasks.Count</span>
     </h5>
 
     @if (!currentTasks.Any())
     {
-        <div class="er-card er-card-body text-center er-muted mb-4">
-            <i class="bi bi-cup-hot d-block display-6 mb-2"></i>
-            لا توجد مهام جارية — تابع <a asp-controller="Providers" asp-action="AvailableRequests">رادار الطلبات</a> وقدم عروضك
+        <div class="er-card er-card-body text-center mb-4">
+            <span class="er-soft-icon mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                <i class="bi bi-cup-hot"></i>
+            </span>
+            <h6 class="fw-bold">لا توجد مهام جارية</h6>
+            <p class="er-muted mb-0">
+                تابع <a asp-controller="Providers" asp-action="AvailableRequests">رادار الطلبات</a> وقدم عروضك
+            </p>
         </div>
     }
 
     <div class="row g-4 mb-5">
         @foreach (var task in currentTasks)
         {
-            // السعر المتفق عليه = عرضي المقبول على هذا الطلب
             var acceptedOffer = task.ProviderOffers.FirstOrDefault(o => o.IsAccepted);
 
-            <div class="col-lg-6">
+            <div class="col-xl-6">
                 <div class="er-card er-card-body h-100">
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge bg-primary">
-                            <i class="@task.Category?.Icon"></i> @task.Category?.Name
-                        </span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="er-soft-icon">
+                                <i class="@task.Category?.Icon"></i>
+                            </span>
+                            <strong>@task.Category?.Name</strong>
+                        </div>
                         <span class="er-status er-status-accepted">
                             <i class="bi bi-check2-circle"></i> جارية
                         </span>
                     </div>
 
-                    <h5>@task.Title</h5>
+                    <h5 class="fw-bold">@task.Title</h5>
                     <p class="er-muted">@task.Description</p>
 
-                    <ul class="list-unstyled small er-muted mb-3">
-                        <li><i class="bi bi-geo-alt-fill"></i> @task.Region?.Name — @task.Address</li>
-                        <li><i class="bi bi-calendar-event"></i> @task.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</li>
+                    <div class="d-flex flex-wrap gap-3 small er-muted mb-3">
+                        <span><i class="bi bi-geo-alt-fill text-primary"></i> @task.Region?.Name — @task.Address</span>
+                        <span><i class="bi bi-calendar-event text-primary"></i> @task.EventDate.ToString("yyyy/MM/dd — hh:mm tt")</span>
                         @if (acceptedOffer != null)
                         {
-                            <li><i class="bi bi-cash-stack"></i> السعر المتفق عليه: <strong>@acceptedOffer.Price ريال</strong></li>
+                            <span><i class="bi bi-cash-stack text-success"></i> المتفق عليه: <strong>@acceptedOffer.Price ريال</strong></span>
                         }
-                    </ul>
+                    </div>
 
-                    @* معلومات التواصل المباشر مع العميل — تظهر فقط بعد الاعتماد *@
-                    <div class="alert alert-info py-2 mb-3">
-                        <strong><i class="bi bi-person-fill"></i> العميل:</strong> @task.User?.FullName
-                        <br />
-                        <strong><i class="bi bi-telephone-fill"></i> الجوال:</strong>
-                        <a href="tel:@task.User?.PhoneNumber" dir="ltr">@(task.User?.PhoneNumber ?? "لم يسجل رقم")</a>
+                    @* التواصل المباشر مع العميل *@
+                    <div class="er-action mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="er-soft-icon"><i class="bi bi-person-fill"></i></span>
+                            <div>
+                                <div class="fw-bold">@task.User?.FullName</div>
+                                <a href="tel:@task.User?.PhoneNumber" class="small" dir="ltr">
+                                    <i class="bi bi-telephone-fill"></i> @(task.User?.PhoneNumber ?? "لم يسجل رقم")
+                                </a>
+                            </div>
+                        </div>
+                        <i class="bi bi-chat-dots fs-4 er-muted"></i>
                     </div>
 
                     <form asp-controller="Providers" asp-action="CompleteRequest" method="post"
                           onsubmit="return confirm('هل أتممت المهمة فعلاً؟ سيتم نقلها إلى الأرشيف');">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="eventRequestId" value="@task.Id" />
-                        <button type="submit" class="btn btn-outline-success er-btn w-100">
+                        <button type="submit" class="btn btn-success er-btn w-100">
                             <i class="bi bi-check2-all"></i> إنهاء المهمة
                         </button>
                     </form>
@@ -96,31 +149,33 @@
         }
     </div>
 
-    @* ================== أرشيف الأعمال المنتهية ================== *@
-    <h5 class="mb-3">
+    @* ================== أرشيف الأعمال ================== *@
+    <h5 class="fw-bold mb-3">
         <i class="bi bi-archive-fill text-secondary"></i>
         أرشيف أعمالي
-        <span class="badge bg-secondary rounded-pill">@archivedTasks.Count</span>
     </h5>
 
     @if (!archivedTasks.Any())
     {
-        <div class="er-card er-card-body text-center er-muted">
-            <i class="bi bi-archive d-block display-6 mb-2"></i>
-            لا توجد أعمال منتهية بعد
+        <div class="er-card er-card-body text-center">
+            <span class="er-soft-icon mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                <i class="bi bi-archive"></i>
+            </span>
+            <p class="er-muted mb-0">لا توجد أعمال منتهية بعد — أول مهمة تنهيها بتظهر هنا</p>
         </div>
     }
     else
     {
-        <div class="er-card">
+        <div class="er-card overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>القسم</th>
                             <th>العنوان</th>
                             <th>العميل</th>
                             <th>المدينة</th>
+                            <th>السعر</th>
                             <th>تاريخ المناسبة</th>
                             <th>الحالة</th>
                         </tr>
@@ -128,11 +183,13 @@
                     <tbody>
                         @foreach (var task in archivedTasks)
                         {
+                            var offer = task.ProviderOffers.FirstOrDefault(o => o.IsAccepted);
                             <tr>
-                                <td><i class="@task.Category?.Icon"></i> @task.Category?.Name</td>
-                                <td>@task.Title</td>
+                                <td><i class="@task.Category?.Icon text-primary"></i> @task.Category?.Name</td>
+                                <td class="fw-bold">@task.Title</td>
                                 <td>@task.User?.FullName</td>
                                 <td>@task.Region?.Name</td>
+                                <td>@(offer?.Price.ToString("0.##") ?? "-") ريال</td>
                                 <td>@task.EventDate.ToString("yyyy/MM/dd")</td>
                                 <td>
                                     <span class="er-status er-status-completed">
