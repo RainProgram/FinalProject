@@ -111,15 +111,27 @@ namespace EventRescue.Controllers
                     model.RememberMe,
                     lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+               if (result.Succeeded)
                     {
-                        return LocalRedirect(model.ReturnUrl);
-                    }
+                        var user = await _userManager.FindByEmailAsync(model.Email);
 
-                    return RedirectToAction("Index", "Home");
-                }
+                        if (user != null)
+                        {
+                            var roles = await _userManager.GetRolesAsync(user);
+
+                            if (roles.Contains(UserRoles.Admin))
+                            {
+                                return RedirectToAction("Dashboard", "Admin");
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                        {
+                            return LocalRedirect(model.ReturnUrl);
+                        }
+
+                        return RedirectToAction("Index", "Home");
+                    }
 
                 ModelState.AddModelError(string.Empty, "البريد الإلكتروني أو كلمة المرور غير صحيحة");
             }

@@ -14,6 +14,9 @@ namespace EventRescue.Data
             var userManager =
                 serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+            var roleManager =
+                serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
             // ==========================================
             // Regions
             // ==========================================
@@ -153,25 +156,46 @@ namespace EventRescue.Data
             // Admin
             // ==========================================
 
-            if (await userManager.FindByEmailAsync("admin@test.com") == null)
-            {
-                var admin = new ApplicationUser
+                // تأكد أن دور Admin موجود
+                if (!await roleManager.RoleExistsAsync("Admin"))
                 {
-                    UserName = "admin@test.com",
-                    Email = "admin@test.com",
-                    FullName = "مدير النظام",
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
 
-                    AccountType = UserType.Provider,
+                var admin = await userManager.FindByEmailAsync("admin@test.com");
 
-                    RegionId = context.Regions
-                        .First(r => r.Name == "الرياض").Id,
+                if (admin == null)
+                {
+                    admin = new ApplicationUser
+                    {
+                        UserName = "admin@test.com",
+                        Email = "admin@test.com",
+                        FullName = "مدير النظام",
 
-                    IsAvailableNow = false,
-                    IsBlocked = false
-                };
+                        AccountType = UserType.Provider,
 
-                await userManager.CreateAsync(admin, "Admin@123");
-            }
+                        RegionId = context.Regions
+                            .First(r => r.Name == "الرياض").Id,
+
+                        IsAvailableNow = false,
+                        IsBlocked = false
+                    };
+
+                    var result = await userManager.CreateAsync(admin, "Admin@123");
+
+                    if (!result.Succeeded)
+                    {
+                        Console.WriteLine(
+                            string.Join(", ", result.Errors.Select(e => e.Description))
+                        );
+                    }
+                }
+
+                // هنا يتم ربط المستخدم الموجود أو الجديد بالدور
+                if (!await userManager.IsInRoleAsync(admin, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+                }
 
             // ==========================================
             // Clients

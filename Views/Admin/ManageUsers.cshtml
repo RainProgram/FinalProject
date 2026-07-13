@@ -1,0 +1,455 @@
+@model List<EventRescue.Models.ApplicationUser>
+@using EventRescue.Models.Enums
+
+@{
+    ViewData["Title"] = "إدارة المستخدمين - EventRescue";
+    string? selectedType = ViewBag.SelectedType as string;
+    var adminIds = ViewBag.AdminIds as HashSet<string> ?? new HashSet<string>();
+    string? currentUserId = ViewBag.CurrentUserId as string;
+}
+
+<style>
+    :root {
+        --er-blue: #2563eb;
+        --er-soft-blue: #eff6ff;
+    }
+
+    .er-page {
+        direction: rtl;
+    }
+
+    .er-hero {
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.30), transparent 45%),
+            linear-gradient(135deg, #1e293b, #0f172a 70%);
+        border: none;
+        position: relative;
+    }
+
+    .er-hero-content {
+        padding: 32px 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .er-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #cbd5e1;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-weight: 800;
+        font-size: 0.88rem;
+        margin-bottom: 14px;
+    }
+
+    .er-title {
+        font-weight: 900;
+        color: #ffffff;
+        margin-bottom: 0;
+    }
+
+    .er-hero-ghost-btn {
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s ease;
+    }
+
+    .er-hero-ghost-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .er-btn {
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 10px 22px;
+    }
+
+    .er-muted {
+        color: #64748b;
+    }
+
+    .er-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .er-card-body {
+        padding: 22px;
+    }
+
+    .er-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f1f5f9;
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+    .er-filter {
+        border-radius: 999px;
+        padding: 9px 18px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        background: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.2s ease;
+    }
+
+    .er-filter:hover {
+        border-color: #bfdbfe;
+        color: var(--er-blue);
+    }
+
+    .er-filter.active {
+        background: var(--er-soft-blue);
+        border-color: #bfdbfe;
+        color: var(--er-blue);
+    }
+
+    .er-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+
+    .er-table thead th {
+        color: #64748b;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 12px 14px;
+        border-bottom: 2px solid #f1f5f9;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .er-table tbody td {
+        padding: 14px;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .er-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .er-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .er-status-client { background: #e0f2fe; color: #0369a1; }
+    .er-status-provider { background: #eff6ff; color: #2563eb; }
+    .er-status-blocked { background: #fee2e2; color: #991b1b; }
+    .er-status-normal { background: #f1f5f9; color: #475569; }
+    .er-status-yes { background: #dcfce7; color: #166534; }
+    .er-status-no { background: #f1f5f9; color: #94a3b8; }
+
+    .er-select {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 6px 10px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        min-width: 140px;
+        color: #1e293b;
+        background: white;
+    }
+
+    .er-select:focus {
+        outline: none;
+        border-color: #93c5fd;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .er-select:disabled {
+        background: #f8fafc;
+        color: #94a3b8;
+    }
+
+    .er-select.is-admin {
+        background: #fff7ed;
+        border-color: #fdba74;
+        color: #c2410c;
+        font-weight: 800;
+    }
+
+    .er-select.is-admin:focus {
+        box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+    }
+
+    .er-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+    }
+
+    .er-modal-content {
+        border-radius: 22px;
+        border: none;
+    }
+</style>
+
+<div class="container er-page mt-4 mb-5">
+
+    @* ================== الهيرو ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <div class="er-badge">
+                    <i class="bi bi-people-fill"></i>
+                    إدارة المستخدمين
+                </div>
+                <h1 class="er-title fs-3">كل المستخدمين</h1>
+            </div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="er-hero-ghost-btn">
+                <i class="bi bi-arrow-right"></i>
+                رجوع للإحصائيات
+            </a>
+        </div>
+    </section>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-4">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @* ================== فلاتر النوع ================== *@
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+        <a asp-action="ManageUsers" class="er-filter @(selectedType == null ? "active" : "")">
+            <i class="bi bi-people-fill"></i>
+            <span>الكل</span>
+        </a>
+        <a asp-action="ManageUsers" asp-route-type="client" class="er-filter @(selectedType == "client" ? "active" : "")">
+            <i class="bi bi-person-check-fill"></i>
+            <span>المستفيدون</span>
+        </a>
+        <a asp-action="ManageUsers" asp-route-type="provider" class="er-filter @(selectedType == "provider" ? "active" : "")">
+            <i class="bi bi-briefcase-fill"></i>
+            <span>مزودو الخدمة</span>
+        </a>
+        <a asp-action="ManageUsers" asp-route-type="admin" class="er-filter @(selectedType == "admin" ? "active" : "")">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>الأدمن</span>
+        </a>
+    </div>
+
+    <div class="er-card">
+        <div class="er-card-header">
+            عدد النتائج: @Model.Count
+        </div>
+        <div class="er-card-body">
+            <div class="table-responsive">
+                <table class="er-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>النوع</th>
+                            <th>المنطقة</th>
+                            <th>التخصص</th>
+                            <th>متاح الآن؟</th>
+                            <th>الحالة</th>
+                            <th>إجراء</th>
+                            <th>الدور</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="9" class="er-empty">لا يوجد مستخدمون</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var user in Model)
+                            {
+                                bool isAdmin = adminIds.Contains(user.Id);
+                                bool isSelf = user.Id == currentUserId;
+
+                                <tr>
+                                    <td class="fw-bold">@user.FullName</td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @if (user.AccountType == UserType.Client)
+                                        {
+                                            <span class="er-status er-status-client">مستفيد</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="er-status er-status-provider">مزود خدمة</span>
+                                        }
+                                    </td>
+                                    <td>@(user.Region?.Name ?? "-")</td>
+                                    <td>@(user.Specialty?.Name ?? "-")</td>
+                                    <td>
+                                        @if (user.IsAvailableNow)
+                                        {
+                                            <span class="er-status er-status-yes">نعم</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="er-status er-status-no">لا</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.IsBlocked)
+                                        {
+                                            <span class="er-status er-status-blocked">محظور</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="er-status er-status-normal">عادي</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form method="post" asp-action="ToggleBlock" asp-controller="Admin" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <input type="hidden" name="type" value="@selectedType" />
+                                            @if (user.IsBlocked)
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-outline-success er-btn">فك الحظر</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-outline-danger er-btn">حظر</button>
+                                            }
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <select class="er-select role-select"
+                                                data-user-id="@user.Id"
+                                                data-user-name="@user.FullName"
+                                                data-current="@(isAdmin ? "admin" : "user")"
+                                                @(isSelf ? "disabled" : "")>
+                                            <option value="user" selected="@(!isAdmin)">مستخدم</option>
+                                            <option value="admin" selected="@(isAdmin)">مدير للنظام</option>
+                                        </select>
+                                        @if (isSelf)
+                                        {
+                                            <small class="d-block mt-1 er-muted">لا يمكنك تعديل دورك الحالي</small>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@* ================= نافذة تأكيد تعيين/إزالة الأدمن ================= *@
+<div class="modal fade" id="confirmAdminModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content er-modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="confirmAdminModalLabel">تأكيد الإجراء</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmAdminModalText" class="mb-0 er-muted"></p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary er-btn" data-bs-dismiss="modal">إلغاء</button>
+                <form id="confirmAdminForm" method="post" asp-action="ToggleAdminRole" asp-controller="Admin" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="userId" id="confirmAdminUserId" value="" />
+                    <input type="hidden" name="type" value="@selectedType" />
+                    <button type="submit" class="btn btn-primary er-btn">نعم</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('confirmAdminModal');
+        var modal = new bootstrap.Modal(modalEl);
+        var modalText = document.getElementById('confirmAdminModalText');
+        var userIdInput = document.getElementById('confirmAdminUserId');
+        var pendingSelect = null;
+
+        function applyAdminStyle(select) {
+            select.classList.toggle('is-admin', select.value === 'admin');
+        }
+
+        // تلوين كل القوائم عند تحميل الصفحة حسب حالتها الحالية
+        document.querySelectorAll('.role-select').forEach(function (select) {
+            applyAdminStyle(select);
+        });
+
+        document.querySelectorAll('.role-select').forEach(function (select) {
+            select.addEventListener('change', function () {
+                var userId = select.getAttribute('data-user-id');
+                var userName = select.getAttribute('data-user-name');
+                var newValue = select.value;
+
+                pendingSelect = select;
+                userIdInput.value = userId;
+
+                modalText.textContent = newValue === 'admin'
+                    ? 'هل تريد تعيين (' + userName + ') كمدير في النظام؟'
+                    : 'هل تريد إزالة صلاحية الأدمن عن (' + userName + ')؟';
+
+                modal.show();
+            });
+        });
+
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            if (pendingSelect && !modalEl.dataset.confirmed) {
+                pendingSelect.value = pendingSelect.getAttribute('data-current');
+                applyAdminStyle(pendingSelect);
+            }
+            modalEl.dataset.confirmed = '';
+            pendingSelect = null;
+        });
+
+        document.getElementById('confirmAdminForm').addEventListener('submit', function () {
+            modalEl.dataset.confirmed = 'true';
+        });
+    });
+</script>

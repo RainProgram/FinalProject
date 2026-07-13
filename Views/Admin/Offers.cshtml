@@ -1,0 +1,201 @@
+@model List<EventRescue.Models.ProviderOffer>
+
+@{
+    ViewData["Title"] = "العروض - EventRescue";
+}
+
+<style>
+    :root {
+        --er-blue: #2563eb;
+        --er-soft-blue: #eff6ff;
+    }
+
+    .er-page {
+        direction: rtl;
+    }
+
+    .er-hero {
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.30), transparent 45%),
+            linear-gradient(135deg, #1e293b, #0f172a 70%);
+        border: none;
+        position: relative;
+    }
+
+    .er-hero-content {
+        padding: 32px 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .er-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #cbd5e1;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-weight: 800;
+        font-size: 0.88rem;
+        margin-bottom: 14px;
+    }
+
+    .er-title {
+        font-weight: 900;
+        color: #ffffff;
+    }
+
+    .er-subtitle {
+        color: #94a3b8;
+    }
+
+    .er-btn {
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 10px 22px;
+    }
+
+    .er-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .er-card-body {
+        padding: 22px;
+    }
+
+    .er-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f1f5f9;
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+    .er-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+
+    .er-table thead th {
+        color: #64748b;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 12px 14px;
+        border-bottom: 2px solid #f1f5f9;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .er-table tbody td {
+        padding: 14px;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .er-table tbody tr:hover { background: #f8fafc; }
+
+    .er-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .er-status-accepted { background: #dcfce7; color: #166534; }
+    .er-status-pending { background: #f1f5f9; color: #475569; }
+
+    .er-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+    }
+</style>
+
+<div class="container er-page mt-4 mb-5">
+
+    @* ================== الهيرو ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content">
+            <div class="er-badge">
+                <i class="bi bi-tags"></i>
+                عروض مزودي الخدمة
+            </div>
+            <h1 class="er-title fs-3">كل العروض</h1>
+            <p class="er-subtitle mb-0">كل العروض المقدمة على طلبات العملاء.</p>
+        </div>
+    </section>
+
+    <div class="er-card">
+        <div class="er-card-header">
+            عدد النتائج: @Model.Count
+        </div>
+        <div class="er-card-body">
+            <div class="table-responsive">
+                <table class="er-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الطلب</th>
+                            <th>مزود الخدمة</th>
+                            <th>السعر</th>
+                            <th>الحالة</th>
+                            <th>تاريخ العرض</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="er-empty">لا توجد عروض</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var offer in Model)
+                            {
+                                <tr>
+                                    <td>@offer.Id</td>
+                                    <td class="fw-bold">@(offer.EventRequest?.Title ?? "-")</td>
+                                    <td>@(offer.Provider?.FullName ?? "-")</td>
+                                    <td>@offer.Price</td>
+                                    <td>
+                                        @if (offer.IsAccepted)
+                                        {
+                                            <span class="er-status er-status-accepted">مقبول</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="er-status er-status-pending">قيد الانتظار</span>
+                                        }
+                                    </td>
+                                    <td>@offer.OfferDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-primary er-btn px-4">
+            <i class="bi bi-arrow-right"></i>
+            رجوع للداشبورد
+        </a>
+    </div>
+
+</div>

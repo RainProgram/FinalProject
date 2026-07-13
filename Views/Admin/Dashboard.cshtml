@@ -1,0 +1,401 @@
+@model EventRescue.Models.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "لوحة الإدارة - EventRescue";
+}
+
+<style>
+    :root {
+        --er-blue: #2563eb;
+        --er-soft-blue: #eff6ff;
+    }
+
+    .er-page {
+        direction: rtl;
+    }
+
+    .er-hero {
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.30), transparent 45%),
+            linear-gradient(135deg, #1e293b, #0f172a 70%);
+        border: none;
+        position: relative;
+    }
+
+    .er-hero-content {
+        padding: 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .er-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #cbd5e1;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-weight: 800;
+        font-size: 0.88rem;
+        margin-bottom: 16px;
+    }
+
+    .er-title {
+        font-weight: 900;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+
+    .er-subtitle {
+        color: #94a3b8;
+        line-height: 1.8;
+    }
+
+    .er-btn {
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 10px 22px;
+    }
+
+    .er-muted {
+        color: #64748b;
+    }
+
+    .er-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .er-card-body {
+        padding: 22px;
+    }
+
+    .er-stat {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 20px;
+        height: 100%;
+        transition: 0.2s ease;
+    }
+
+    .er-stat-link {
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+
+    .er-stat-link:hover .er-stat {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
+        border-color: #bfdbfe;
+    }
+
+    .er-soft-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--er-soft-blue);
+        color: var(--er-blue);
+        font-size: 1.4rem;
+    }
+
+    .er-stat-number {
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: #0f172a;
+        margin: 10px 0 2px;
+    }
+
+    .er-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+        color: #0f172a;
+        margin: 30px 0 16px;
+    }
+
+    .er-section-title .er-soft-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        font-size: 1rem;
+    }
+
+    .er-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+
+    .er-table thead th {
+        color: #64748b;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 12px 14px;
+        border-bottom: 2px solid #f1f5f9;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .er-table tbody td {
+        padding: 14px;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .er-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .er-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .er-status-pending { background: #fff7ed; color: #c2410c; }
+    .er-status-accepted { background: #e0f2fe; color: #0369a1; }
+    .er-status-completed { background: #dcfce7; color: #166534; }
+    .er-status-canceled { background: #fee2e2; color: #991b1b; }
+
+    .er-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+    }
+</style>
+
+<div class="container er-page mt-4 mb-5">
+
+    @* ================== الهيرو ================== *@
+    <section class="er-hero mb-4">
+        <div class="er-hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="er-badge">
+                        <i class="bi bi-speedometer2"></i>
+                        لوحة الإدارة
+                    </div>
+                    <h1 class="er-title">إحصائيات الإدارة</h1>
+                    <p class="er-subtitle mb-0">
+                        نظرة عامة على أداء المنصة والمستخدمين والطلبات الحالية.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-start text-center mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="ManageUsers" class="btn btn-primary er-btn">
+                        <i class="bi bi-people"></i>
+                        إدارة المستخدمين
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* ================== إحصائيات المستخدمين ================== *@
+    <div class="er-section-title">
+        <span class="er-soft-icon"><i class="bi bi-people-fill"></i></span>
+        <span>إحصائيات المستخدمين</span>
+    </div>
+
+    <div class="row g-3 mb-2">
+        <div class="col-6 col-md-3">
+            <a asp-controller="Admin" asp-action="ManageUsers" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#f1f5f9; color:#334155;"><i class="bi bi-people"></i></span>
+                    <div class="er-stat-number">@Model.TotalUsers</div>
+                    <div class="er-muted small fw-bold">إجمالي المستخدمين</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Admin" asp-action="ManageUsers" asp-route-type="client" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#e0f2fe; color:#0369a1;"><i class="bi bi-person-heart"></i></span>
+                    <div class="er-stat-number">@Model.TotalClients</div>
+                    <div class="er-muted small fw-bold">المستفيدون</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Admin" asp-action="ManageUsers" asp-route-type="provider" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#eff6ff; color:#2563eb;"><i class="bi bi-briefcase"></i></span>
+                    <div class="er-stat-number">@Model.TotalProviders</div>
+                    <div class="er-muted small fw-bold">مزودو الخدمة</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Admin" asp-action="ManageUsers" asp-route-type="blocked" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#fee2e2; color:#991b1b;"><i class="bi bi-person-x"></i></span>
+                    <div class="er-stat-number">@Model.BlockedUsers</div>
+                    <div class="er-muted small fw-bold">الحسابات المحظورة</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    @* ================== مؤشرات الطلبات والعروض ================== *@
+    <div class="er-section-title">
+        <span class="er-soft-icon"><i class="bi bi-clipboard-data-fill"></i></span>
+        <span>مؤشرات حركة الطلبات والعروض</span>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Requests" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#f1f5f9; color:#334155;"><i class="bi bi-folder2-open"></i></span>
+                    <div class="er-stat-number">@Model.TotalRequests</div>
+                    <div class="er-muted small fw-bold">إجمالي الطلبات</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Requests" asp-route-status="Pending" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#fff7ed; color:#c2410c;"><i class="bi bi-hourglass-split"></i></span>
+                    <div class="er-stat-number">@Model.PendingRequests</div>
+                    <div class="er-muted small fw-bold">طلبات متاحة</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Requests" asp-route-status="Accepted" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#e0f2fe; color:#0369a1;"><i class="bi bi-hand-thumbs-up"></i></span>
+                    <div class="er-stat-number">@Model.AcceptedRequests</div>
+                    <div class="er-muted small fw-bold">طلبات مقبولة</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Requests" asp-route-status="Completed" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#dcfce7; color:#166534;"><i class="bi bi-check2-circle"></i></span>
+                    <div class="er-stat-number">@Model.CompletedRequests</div>
+                    <div class="er-muted small fw-bold">طلبات مكتملة</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Requests" asp-route-status="Canceled" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#fee2e2; color:#991b1b;"><i class="bi bi-dash-circle"></i></span>
+                    <div class="er-stat-number">@Model.CanceledRequests</div>
+                    <div class="er-muted small fw-bold">طلبات ملغاة</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md">
+            <a asp-controller="Admin" asp-action="Offers" class="er-stat-link">
+                <div class="er-stat text-center">
+                    <span class="er-soft-icon" style="background:#eff6ff; color:#2563eb;"><i class="bi bi-tags"></i></span>
+                    <div class="er-stat-number">@Model.TotalOffers</div>
+                    <div class="er-muted small fw-bold">إجمالي العروض</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    @* ================== آخر الطلبات ================== *@
+    <div class="er-section-title">
+        <span class="er-soft-icon"><i class="bi bi-clipboard-data-fill"></i></span>
+        <span>آخر طلبات</span>
+    </div>
+
+    <div class="er-card er-card-body">
+        <div class="table-responsive">
+            <table class="er-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>العنوان</th>
+                        <th>العميل</th>
+                        <th>القسم</th>
+                        <th>المنطقة</th>
+                        <th>الحالة</th>
+                        <th>تاريخ الإنشاء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.RecentRequests.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="er-empty">لا توجد طلبات</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var req in Model.RecentRequests)
+                        {
+                            string statusText = req.Status switch
+                            {
+                                EventRescue.Models.Enums.EventStatus.Pending => "متاح للعروض",
+                                EventRescue.Models.Enums.EventStatus.Accepted => "مقبول",
+                                EventRescue.Models.Enums.EventStatus.Completed => "مكتمل",
+                                EventRescue.Models.Enums.EventStatus.Canceled => "ملغي",
+                                _ => req.Status.ToString()
+                            };
+
+                            string statusClass = req.Status switch
+                            {
+                                EventRescue.Models.Enums.EventStatus.Pending => "er-status-pending",
+                                EventRescue.Models.Enums.EventStatus.Accepted => "er-status-accepted",
+                                EventRescue.Models.Enums.EventStatus.Completed => "er-status-completed",
+                                EventRescue.Models.Enums.EventStatus.Canceled => "er-status-canceled",
+                                _ => "er-status-pending"
+                            };
+
+                            string statusIcon = req.Status switch
+                            {
+                                EventRescue.Models.Enums.EventStatus.Pending => "bi-hourglass-split",
+                                EventRescue.Models.Enums.EventStatus.Accepted => "bi-check2-circle",
+                                EventRescue.Models.Enums.EventStatus.Completed => "bi-patch-check",
+                                EventRescue.Models.Enums.EventStatus.Canceled => "bi-x-circle",
+                                _ => "bi-info-circle"
+                            };
+
+                            <tr>
+                                <td>@req.Id</td>
+                                <td class="fw-bold">@req.Title</td>
+                                <td>@(req.User?.FullName ?? "-")</td>
+                                <td>@(req.Category?.Name ?? "-")</td>
+                                <td>@(req.Region?.Name ?? "-")</td>
+                                <td><span class="er-status @statusClass"><i class="bi @statusIcon"></i>@statusText</span></td>
+                                <td>@req.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center">
+        <a asp-controller="Admin" asp-action="ManageUsers" class="btn btn-outline-primary er-btn px-4">
+            <i class="bi bi-arrow-left"></i>
+            إدارة المستخدمين
+        </a>
+    </div>
+
+</div>
