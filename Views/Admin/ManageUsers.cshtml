@@ -1,11 +1,15 @@
 @model List<EventRescue.Models.ApplicationUser>
 @using EventRescue.Models.Enums
+@using Microsoft.Extensions.Localization
+@using EventRescue
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "إدارة المستخدمين - EventRescue";
+    ViewData["Title"] = Localizer["Users_ViewTitle"];
     string? selectedType = ViewBag.SelectedType as string;
     var adminIds = ViewBag.AdminIds as HashSet<string> ?? new HashSet<string>();
     string? currentUserId = ViewBag.CurrentUserId as string;
+    
 }
 
 <style>
@@ -16,6 +20,14 @@
 
     .er-page {
         direction: rtl;
+    }
+
+    .er-page[dir="ltr"] {
+        direction: ltr;
+    }
+
+    .er-page[dir="ltr"] .er-table thead th {
+        text-align: left;
     }
 
     .er-hero {
@@ -218,7 +230,7 @@
     }
 </style>
 
-<div class="container er-page mt-4 mb-5">
+<div class="container er-page mt-4 mb-5" dir="rtl">
 
     @* ================== الهيرو ================== *@
     <section class="er-hero mb-4">
@@ -226,13 +238,13 @@
             <div>
                 <div class="er-badge">
                     <i class="bi bi-people-fill"></i>
-                    إدارة المستخدمين
+                    @Localizer["Users_Badge"]
                 </div>
-                <h1 class="er-title fs-3">كل المستخدمين</h1>
+                <h1 class="er-title fs-3">@Localizer["Users_PageTitle"]</h1>
             </div>
             <a asp-controller="Admin" asp-action="Dashboard" class="er-hero-ghost-btn">
                 <i class="bi bi-arrow-right"></i>
-                رجوع للإحصائيات
+                @Localizer["Users_BackToStats"]
             </a>
         </div>
     </section>
@@ -256,47 +268,47 @@
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
         <a asp-action="ManageUsers" class="er-filter @(selectedType == null ? "active" : "")">
             <i class="bi bi-people-fill"></i>
-            <span>الكل</span>
+            <span>@Localizer["Common_All"]</span>
         </a>
         <a asp-action="ManageUsers" asp-route-type="client" class="er-filter @(selectedType == "client" ? "active" : "")">
             <i class="bi bi-person-check-fill"></i>
-            <span>المستفيدون</span>
+            <span>@Localizer["Dash_Clients"]</span>
         </a>
         <a asp-action="ManageUsers" asp-route-type="provider" class="er-filter @(selectedType == "provider" ? "active" : "")">
             <i class="bi bi-briefcase-fill"></i>
-            <span>مزودو الخدمة</span>
+            <span>@Localizer["Dash_Providers"]</span>
         </a>
         <a asp-action="ManageUsers" asp-route-type="admin" class="er-filter @(selectedType == "admin" ? "active" : "")">
             <i class="bi bi-shield-lock-fill"></i>
-            <span>الأدمن</span>
+            <span>@Localizer["Users_FilterAdmins"]</span>
         </a>
     </div>
 
     <div class="er-card">
         <div class="er-card-header">
-            عدد النتائج: @Model.Count
+            @Localizer["Common_ResultsCount"]: @Model.Count
         </div>
         <div class="er-card-body">
             <div class="table-responsive">
                 <table class="er-table">
                     <thead>
                         <tr>
-                            <th>الاسم</th>
-                            <th>البريد الإلكتروني</th>
-                            <th>النوع</th>
-                            <th>المنطقة</th>
-                            <th>التخصص</th>
-                            <th>متاح الآن؟</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                            <th>الدور</th>
+                            <th>@Localizer["Users_ColName"]</th>
+                            <th>@Localizer["Users_ColEmail"]</th>
+                            <th>@Localizer["Users_ColType"]</th>
+                            <th>@Localizer["Common_Region"]</th>
+                            <th>@Localizer["Users_ColSpecialty"]</th>
+                            <th>@Localizer["Users_ColAvailableNow"]</th>
+                            <th>@Localizer["Common_Status"]</th>
+                            <th>@Localizer["Users_ColAction"]</th>
+                            <th>@Localizer["Users_ColRole"]</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="9" class="er-empty">لا يوجد مستخدمون</td>
+                                <td colspan="9" class="er-empty">@Localizer["Users_NoUsers"]</td>
                             </tr>
                         }
                         else
@@ -312,11 +324,11 @@
                                     <td>
                                         @if (user.AccountType == UserType.Client)
                                         {
-                                            <span class="er-status er-status-client">مستفيد</span>
+                                            <span class="er-status er-status-client">@Localizer["Users_TypeClient"]</span>
                                         }
                                         else
                                         {
-                                            <span class="er-status er-status-provider">مزود خدمة</span>
+                                            <span class="er-status er-status-provider">@Localizer["Users_TypeProvider"]</span>
                                         }
                                     </td>
                                     <td>@(user.Region?.Name ?? "-")</td>
@@ -324,21 +336,21 @@
                                     <td>
                                         @if (user.IsAvailableNow)
                                         {
-                                            <span class="er-status er-status-yes">نعم</span>
+                                            <span class="er-status er-status-yes">@Localizer["Common_Yes"]</span>
                                         }
                                         else
                                         {
-                                            <span class="er-status er-status-no">لا</span>
+                                            <span class="er-status er-status-no">@Localizer["Common_No"]</span>
                                         }
                                     </td>
                                     <td>
                                         @if (user.IsBlocked)
                                         {
-                                            <span class="er-status er-status-blocked">محظور</span>
+                                            <span class="er-status er-status-blocked">@Localizer["Users_Blocked"]</span>
                                         }
                                         else
                                         {
-                                            <span class="er-status er-status-normal">عادي</span>
+                                            <span class="er-status er-status-normal">@Localizer["Users_Normal"]</span>
                                         }
                                     </td>
                                     <td>
@@ -348,11 +360,11 @@
                                             <input type="hidden" name="type" value="@selectedType" />
                                             @if (user.IsBlocked)
                                             {
-                                                <button type="submit" class="btn btn-sm btn-outline-success er-btn">فك الحظر</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-success er-btn">@Localizer["Users_Unblock"]</button>
                                             }
                                             else
                                             {
-                                                <button type="submit" class="btn btn-sm btn-outline-danger er-btn">حظر</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger er-btn">@Localizer["Users_Block"]</button>
                                             }
                                         </form>
                                     </td>
@@ -361,13 +373,15 @@
                                                 data-user-id="@user.Id"
                                                 data-user-name="@user.FullName"
                                                 data-current="@(isAdmin ? "admin" : "user")"
+                                                data-confirm-set-admin="@string.Format(Localizer["Users_ConfirmSetAdmin"], user.FullName)"
+                                                data-confirm-remove-admin="@string.Format(Localizer["Users_ConfirmRemoveAdmin"], user.FullName)"
                                                 @(isSelf ? "disabled" : "")>
-                                            <option value="user" selected="@(!isAdmin)">مستخدم</option>
-                                            <option value="admin" selected="@(isAdmin)">مدير للنظام</option>
+                                            <option value="user" selected="@(!isAdmin)">@Localizer["Users_RoleUser"]</option>
+                                            <option value="admin" selected="@(isAdmin)">@Localizer["Users_RoleAdmin"]</option>
                                         </select>
                                         @if (isSelf)
                                         {
-                                            <small class="d-block mt-1 er-muted">لا يمكنك تعديل دورك الحالي</small>
+                                            <small class="d-block mt-1 er-muted">@Localizer["Users_CannotEditOwnRole"]</small>
                                         }
                                     </td>
                                 </tr>
@@ -384,21 +398,21 @@
 @* ================= نافذة تأكيد تعيين/إزالة الأدمن ================= *@
 <div class="modal fade" id="confirmAdminModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content er-modal-content">
+        <div class="modal-content er-modal-content" dir="rtl">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="confirmAdminModalLabel">تأكيد الإجراء</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                <h5 class="modal-title fw-bold" id="confirmAdminModalLabel">@Localizer["Users_ConfirmActionTitle"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["Common_Close"]"></button>
             </div>
             <div class="modal-body">
                 <p id="confirmAdminModalText" class="mb-0 er-muted"></p>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary er-btn" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-outline-secondary er-btn" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
                 <form id="confirmAdminForm" method="post" asp-action="ToggleAdminRole" asp-controller="Admin" class="d-inline">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="userId" id="confirmAdminUserId" value="" />
                     <input type="hidden" name="type" value="@selectedType" />
-                    <button type="submit" class="btn btn-primary er-btn">نعم</button>
+                    <button type="submit" class="btn btn-primary er-btn">@Localizer["Common_Yes"]</button>
                 </form>
             </div>
         </div>
@@ -417,7 +431,6 @@
             select.classList.toggle('is-admin', select.value === 'admin');
         }
 
-        // تلوين كل القوائم عند تحميل الصفحة حسب حالتها الحالية
         document.querySelectorAll('.role-select').forEach(function (select) {
             applyAdminStyle(select);
         });
@@ -425,15 +438,15 @@
         document.querySelectorAll('.role-select').forEach(function (select) {
             select.addEventListener('change', function () {
                 var userId = select.getAttribute('data-user-id');
-                var userName = select.getAttribute('data-user-name');
                 var newValue = select.value;
 
                 pendingSelect = select;
                 userIdInput.value = userId;
 
+                // النصوص جاهزة ومترجمة من السيرفر (تدعم عربي/إنجليزي حسب اللغة الحالية)
                 modalText.textContent = newValue === 'admin'
-                    ? 'هل تريد تعيين (' + userName + ') كمدير في النظام؟'
-                    : 'هل تريد إزالة صلاحية الأدمن عن (' + userName + ')؟';
+                    ? select.getAttribute('data-confirm-set-admin')
+                    : select.getAttribute('data-confirm-remove-admin');
 
                 modal.show();
             });

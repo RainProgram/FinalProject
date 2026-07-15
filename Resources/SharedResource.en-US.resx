@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Common_Hash" xml:space="preserve"><value>#</value></data>
+  <data name="Common_Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Common_Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Common_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Common_Region" xml:space="preserve"><value>Region</value></data>
+  <data name="Common_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Common_CreatedAt" xml:space="preserve"><value>Created At</value></data>
+  <data name="Common_ResultsCount" xml:space="preserve"><value>Results count</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="Common_No" xml:space="preserve"><value>No</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Common_All" xml:space="preserve"><value>All</value></data>
+  <data name="Status_Pending" xml:space="preserve"><value>Open for offers</value></data>
+  <data name="Status_Accepted" xml:space="preserve"><value>Accepted</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Status_Canceled" xml:space="preserve"><value>Canceled</value></data>
+  <data name="Dash_ViewTitle" xml:space="preserve"><value>Admin Dashboard - EventRescue</value></data>
+  <data name="Dash_Badge" xml:space="preserve"><value>Admin Dashboard</value></data>
+  <data name="Dash_Title" xml:space="preserve"><value>Admin Statistics</value></data>
+  <data name="Dash_Subtitle" xml:space="preserve"><value>Overview of platform performance, users, and current requests.</value></data>
+  <data name="Dash_ManageUsersBtn" xml:space="preserve"><value>Manage Users</value></data>
+  <data name="Dash_UserStatsSection" xml:space="preserve"><value>User Statistics</value></data>
+  <data name="Dash_TotalUsers" xml:space="preserve"><value>Total Users</value></data>
+  <data name="Dash_Clients" xml:space="preserve"><value>Clients</value></data>
+  <data name="Dash_Providers" xml:space="preserve"><value>Service Providers</value></data>
+  <data name="Dash_BlockedUsers" xml:space="preserve"><value>Blocked Accounts</value></data>
+  <data name="Dash_RequestsMetricsSection" xml:space="preserve"><value>Requests &amp; Offers Metrics</value></data>
+  <data name="Dash_TotalRequests" xml:space="preserve"><value>Total Requests</value></data>
+  <data name="Dash_PendingRequests" xml:space="preserve"><value>Available Requests</value></data>
+  <data name="Dash_AcceptedRequests" xml:space="preserve"><value>Accepted Requests</value></data>
+  <data name="Dash_CompletedRequests" xml:space="preserve"><value>Completed Requests</value></data>
+  <data name="Dash_CanceledRequests" xml:space="preserve"><value>Canceled Requests</value></data>
+  <data name="Dash_TotalOffers" xml:space="preserve"><value>Total Offers</value></data>
+  <data name="Dash_RecentRequestsSection" xml:space="preserve"><value>Recent Requests</value></data>
+  <data name="Dash_NoRequests" xml:space="preserve"><value>No requests found</value></data>
+  <data name="Users_ViewTitle" xml:space="preserve"><value>Manage Users - EventRescue</value></data>
+  <data name="Users_Badge" xml:space="preserve"><value>Manage Users</value></data>
+  <data name="Users_PageTitle" xml:space="preserve"><value>All Users</value></data>
+  <data name="Users_BackToStats" xml:space="preserve"><value>Back to Statistics</value></data>
+  <data name="Users_FilterAdmins" xml:space="preserve"><value>Admins</value></data>
+  <data name="Users_ColName" xml:space="preserve"><value>Name</value></data>
+  <data name="Users_ColEmail" xml:space="preserve"><value>Email</value></data>
+  <data name="Users_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="Users_ColSpecialty" xml:space="preserve"><value>Specialty</value></data>
+  <data name="Users_ColAvailableNow" xml:space="preserve"><value>Available Now?</value></data>
+  <data name="Users_ColAction" xml:space="preserve"><value>Action</value></data>
+  <data name="Users_ColRole" xml:space="preserve"><value>Role</value></data>
+  <data name="Users_TypeClient" xml:space="preserve"><value>Client</value></data>
+  <data name="Users_TypeProvider" xml:space="preserve"><value>Provider</value></data>
+  <data name="Users_Blocked" xml:space="preserve"><value>Blocked</value></data>
+  <data name="Users_Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Users_Unblock" xml:space="preserve"><value>Unblock</value></data>
+  <data name="Users_Block" xml:space="preserve"><value>Block</value></data>
+  <data name="Users_RoleUser" xml:space="preserve"><value>User</value></data>
+  <data name="Users_RoleAdmin" xml:space="preserve"><value>System Admin</value></data>
+  <data name="Users_CannotEditOwnRole" xml:space="preserve"><value>You cannot modify your current role</value></data>
+  <data name="Users_NoUsers" xml:space="preserve"><value>No users found</value></data>
+  <data name="Users_ConfirmActionTitle" xml:space="preserve"><value>Confirm Action</value></data>
+  <data name="Users_ConfirmSetAdmin" xml:space="preserve"><value>Do you want to set ({0}) as a system admin?</value></data>
+  <data name="Users_ConfirmRemoveAdmin" xml:space="preserve"><value>Do you want to remove admin privileges from ({0})?</value></data>
+  <data name="Offers_ViewTitle" xml:space="preserve"><value>Offers - EventRescue</value></data>
+  <data name="Offers_Badge" xml:space="preserve"><value>Service Provider Offers</value></data>
+  <data name="Offers_PageTitle" xml:space="preserve"><value>All Offers</value></data>
+  <data name="Offers_Subtitle" xml:space="preserve"><value>All offers submitted on client requests.</value></data>
+  <data name="Offers_ColRequest" xml:space="preserve"><value>Request</value></data>
+  <data name="Offers_ColProvider" xml:space="preserve"><value>Service Provider</value></data>
+  <data name="Offers_ColPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="Offers_ColOfferDate" xml:space="preserve"><value>Offer Date</value></data>
+  <data name="Offers_NoOffers" xml:space="preserve"><value>No offers found</value></data>
+  <data name="Offers_Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="Offers_BackToDashboard" xml:space="preserve"><value>Back to Dashboard</value></data>
+  <data name="Req_ViewTitle" xml:space="preserve"><value>Requests - EventRescue</value></data>
+  <data name="Req_Badge" xml:space="preserve"><value>Manage Requests</value></data>
+  <data name="Req_PageTitle" xml:space="preserve"><value>All Requests</value></data>
+  <data name="Req_Subtitle" xml:space="preserve"><value>View all requests with the ability to filter by status.</value></data>
+  <data name="Req_FilterAvailable" xml:space="preserve"><value>Available</value></data>
+  <data name="Req_FilterAccepted" xml:space="preserve"><value>Accepted</value></data>
+  <data name="Req_FilterCompleted" xml:space="preserve"><value>Completed</value></data>
+  <data name="Req_FilterCanceled" xml:space="preserve"><value>Canceled</value></data>
+  <data name="Layout_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Layout_AvailableRequests" xml:space="preserve"><value>Requests</value></data>
+  <data name="Layout_MyTasks" xml:space="preserve"><value>My Tasks</value></data>
+  <data name="Layout_EmergencyToday" xml:space="preserve"><value>Emergencies</value></data>
+  <data name="Layout_IHaveEvent" xml:space="preserve"><value>Add Event</value></data>
+  <data name="Layout_MyRequests" xml:space="preserve"><value>My Requests</value></data>
+  <data name="Layout_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Layout_Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Layout_Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="Layout_Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Layout_CreateAccount" xml:space="preserve"><value>Create Account</value></data>
+  <data name="Layout_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Layout_LangArabicLabel" xml:space="preserve"><value>Arabic</value></data>
+  <data name="Layout_LangEnglishLabel" xml:space="preserve"><value>English</value></data>
+</root>

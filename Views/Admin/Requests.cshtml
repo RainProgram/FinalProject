@@ -1,9 +1,13 @@
 @model List<EventRescue.Models.EventRequest>
 @using EventRescue.Models.Enums
+@using Microsoft.Extensions.Localization
+@using EventRescue
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "الطلبات - EventRescue";
+    ViewData["Title"] = Localizer["Req_ViewTitle"];
     var selectedStatus = ViewBag.SelectedStatus as EventStatus?;
+
 }
 
 <style>
@@ -14,6 +18,14 @@
 
     .er-page {
         direction: rtl;
+    }
+
+    .er-page[dir="ltr"] {
+        direction: ltr;
+    }
+
+    .er-page[dir="ltr"] .er-table thead th {
+        text-align: left;
     }
 
     .er-hero {
@@ -151,51 +163,51 @@
     }
 </style>
 
-<div class="container er-page mt-4 mb-5">
+<div class="container er-page mt-4 mb-5" dir="rtl">
 
     @* ================== الهيرو ================== *@
     <section class="er-hero mb-4">
         <div class="er-hero-content">
             <div class="er-badge">
                 <i class="bi bi-clipboard-data-fill"></i>
-                إدارة الطلبات
+                @Localizer["Req_Badge"]
             </div>
-            <h1 class="er-title fs-3">كل الطلبات</h1>
-            <p class="er-subtitle mb-0">عرض كل الطلبات مع إمكانية الفلترة حسب الحالة.</p>
+            <h1 class="er-title fs-3">@Localizer["Req_PageTitle"]</h1>
+            <p class="er-subtitle mb-0">@Localizer["Req_Subtitle"]</p>
         </div>
     </section>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
-        <a asp-action="Requests" class="er-filter @(selectedStatus == null ? "active-all" : "")">الكل</a>
-        <a asp-action="Requests" asp-route-status="Pending" class="er-filter @(selectedStatus == EventStatus.Pending ? "active-pending" : "")">متاحة</a>
-        <a asp-action="Requests" asp-route-status="Accepted" class="er-filter @(selectedStatus == EventStatus.Accepted ? "active-accepted" : "")">مقبولة</a>
-        <a asp-action="Requests" asp-route-status="Completed" class="er-filter @(selectedStatus == EventStatus.Completed ? "active-completed" : "")">مكتملة</a>
-        <a asp-action="Requests" asp-route-status="Canceled" class="er-filter @(selectedStatus == EventStatus.Canceled ? "active-canceled" : "")">ملغاة</a>
+        <a asp-action="Requests" class="er-filter @(selectedStatus == null ? "active-all" : "")">@Localizer["Common_All"]</a>
+        <a asp-action="Requests" asp-route-status="Pending" class="er-filter @(selectedStatus == EventStatus.Pending ? "active-pending" : "")">@Localizer["Req_FilterAvailable"]</a>
+        <a asp-action="Requests" asp-route-status="Accepted" class="er-filter @(selectedStatus == EventStatus.Accepted ? "active-accepted" : "")">@Localizer["Req_FilterAccepted"]</a>
+        <a asp-action="Requests" asp-route-status="Completed" class="er-filter @(selectedStatus == EventStatus.Completed ? "active-completed" : "")">@Localizer["Req_FilterCompleted"]</a>
+        <a asp-action="Requests" asp-route-status="Canceled" class="er-filter @(selectedStatus == EventStatus.Canceled ? "active-canceled" : "")">@Localizer["Req_FilterCanceled"]</a>
     </div>
 
     <div class="er-card">
         <div class="er-card-header">
-            عدد النتائج: @Model.Count
+            @Localizer["Common_ResultsCount"]: @Model.Count
         </div>
         <div class="er-card-body">
             <div class="table-responsive">
                 <table class="er-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>العنوان</th>
-                            <th>العميل</th>
-                            <th>القسم</th>
-                            <th>المنطقة</th>
-                            <th>الحالة</th>
-                            <th>تاريخ الإنشاء</th>
+                            <th>@Localizer["Common_Hash"]</th>
+                            <th>@Localizer["Common_Title"]</th>
+                            <th>@Localizer["Common_Client"]</th>
+                            <th>@Localizer["Common_Category"]</th>
+                            <th>@Localizer["Common_Region"]</th>
+                            <th>@Localizer["Common_Status"]</th>
+                            <th>@Localizer["Common_CreatedAt"]</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="7" class="er-empty">لا توجد طلبات</td>
+                                <td colspan="7" class="er-empty">@Localizer["Dash_NoRequests"]</td>
                             </tr>
                         }
                         else
@@ -204,10 +216,10 @@
                             {
                                 string statusText = req.Status switch
                                 {
-                                    EventStatus.Pending => "متاح للعروض",
-                                    EventStatus.Accepted => "مقبول",
-                                    EventStatus.Completed => "مكتمل",
-                                    EventStatus.Canceled => "ملغي",
+                                    EventStatus.Pending => Localizer["Status_Pending"],
+                                    EventStatus.Accepted => Localizer["Status_Accepted"],
+                                    EventStatus.Completed => Localizer["Status_Completed"],
+                                    EventStatus.Canceled => Localizer["Status_Canceled"],
                                     _ => req.Status.ToString()
                                 };
 
@@ -249,7 +261,7 @@
     <div class="mt-4 d-flex justify-content-center">
         <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-primary er-btn px-4">
             <i class="bi bi-arrow-right"></i>
-            رجوع 
+            @Localizer["Common_Back"]
         </a>
     </div>
 

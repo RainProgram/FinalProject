@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Common_Hash" xml:space="preserve"><value>#</value></data>
+  <data name="Common_Title" xml:space="preserve"><value>العنوان</value></data>
+  <data name="Common_Client" xml:space="preserve"><value>العميل</value></data>
+  <data name="Common_Category" xml:space="preserve"><value>القسم</value></data>
+  <data name="Common_Region" xml:space="preserve"><value>المنطقة</value></data>
+  <data name="Common_Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Common_CreatedAt" xml:space="preserve"><value>تاريخ الإنشاء</value></data>
+  <data name="Common_ResultsCount" xml:space="preserve"><value>عدد النتائج</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>نعم</value></data>
+  <data name="Common_No" xml:space="preserve"><value>لا</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="Common_All" xml:space="preserve"><value>الكل</value></data>
+  <data name="Status_Pending" xml:space="preserve"><value>متاح للعروض</value></data>
+  <data name="Status_Accepted" xml:space="preserve"><value>مقبول</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>مكتمل</value></data>
+  <data name="Status_Canceled" xml:space="preserve"><value>ملغي</value></data>
+  <data name="Dash_ViewTitle" xml:space="preserve"><value>لوحة الإدارة - EventRescue</value></data>
+  <data name="Dash_Badge" xml:space="preserve"><value>لوحة الإدارة</value></data>
+  <data name="Dash_Title" xml:space="preserve"><value>إحصائيات الإدارة</value></data>
+  <data name="Dash_Subtitle" xml:space="preserve"><value>نظرة عامة على أداء المنصة والمستخدمين والطلبات الحالية.</value></data>
+  <data name="Dash_ManageUsersBtn" xml:space="preserve"><value>إدارة المستخدمين</value></data>
+  <data name="Dash_UserStatsSection" xml:space="preserve"><value>إحصائيات المستخدمين</value></data>
+  <data name="Dash_TotalUsers" xml:space="preserve"><value>إجمالي المستخدمين</value></data>
+  <data name="Dash_Clients" xml:space="preserve"><value>المستفيدون</value></data>
+  <data name="Dash_Providers" xml:space="preserve"><value>مزودو الخدمة</value></data>
+  <data name="Dash_BlockedUsers" xml:space="preserve"><value>الحسابات المحظورة</value></data>
+  <data name="Dash_RequestsMetricsSection" xml:space="preserve"><value>مؤشرات حركة الطلبات والعروض</value></data>
+  <data name="Dash_TotalRequests" xml:space="preserve"><value>إجمالي الطلبات</value></data>
+  <data name="Dash_PendingRequests" xml:space="preserve"><value>طلبات متاحة</value></data>
+  <data name="Dash_AcceptedRequests" xml:space="preserve"><value>طلبات مقبولة</value></data>
+  <data name="Dash_CompletedRequests" xml:space="preserve"><value>طلبات مكتملة</value></data>
+  <data name="Dash_CanceledRequests" xml:space="preserve"><value>طلبات ملغاة</value></data>
+  <data name="Dash_TotalOffers" xml:space="preserve"><value>إجمالي العروض</value></data>
+  <data name="Dash_RecentRequestsSection" xml:space="preserve"><value>آخر طلبات</value></data>
+  <data name="Dash_NoRequests" xml:space="preserve"><value>لا توجد طلبات</value></data>
+  <data name="Users_ViewTitle" xml:space="preserve"><value>إدارة المستخدمين - EventRescue</value></data>
+  <data name="Users_Badge" xml:space="preserve"><value>إدارة المستخدمين</value></data>
+  <data name="Users_PageTitle" xml:space="preserve"><value>كل المستخدمين</value></data>
+  <data name="Users_BackToStats" xml:space="preserve"><value>رجوع للإحصائيات</value></data>
+  <data name="Users_FilterAdmins" xml:space="preserve"><value>الأدمن</value></data>
+  <data name="Users_ColName" xml:space="preserve"><value>الاسم</value></data>
+  <data name="Users_ColEmail" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Users_ColType" xml:space="preserve"><value>النوع</value></data>
+  <data name="Users_ColSpecialty" xml:space="preserve"><value>التخصص</value></data>
+  <data name="Users_ColAvailableNow" xml:space="preserve"><value>متاح الآن؟</value></data>
+  <data name="Users_ColAction" xml:space="preserve"><value>إجراء</value></data>
+  <data name="Users_ColRole" xml:space="preserve"><value>الدور</value></data>
+  <data name="Users_TypeClient" xml:space="preserve"><value>مستفيد</value></data>
+  <data name="Users_TypeProvider" xml:space="preserve"><value>مزود خدمة</value></data>
+  <data name="Users_Blocked" xml:space="preserve"><value>محظور</value></data>
+  <data name="Users_Normal" xml:space="preserve"><value>عادي</value></data>
+  <data name="Users_Unblock" xml:space="preserve"><value>فك الحظر</value></data>
+  <data name="Users_Block" xml:space="preserve"><value>حظر</value></data>
+  <data name="Users_RoleUser" xml:space="preserve"><value>مستخدم</value></data>
+  <data name="Users_RoleAdmin" xml:space="preserve"><value>مدير للنظام</value></data>
+  <data name="Users_CannotEditOwnRole" xml:space="preserve"><value>لا يمكنك تعديل دورك الحالي</value></data>
+  <data name="Users_NoUsers" xml:space="preserve"><value>لا يوجد مستخدمون</value></data>
+  <data name="Users_ConfirmActionTitle" xml:space="preserve"><value>تأكيد الإجراء</value></data>
+  <data name="Users_ConfirmSetAdmin" xml:space="preserve"><value>هل تريد تعيين ({0}) كمدير في النظام؟</value></data>
+  <data name="Users_ConfirmRemoveAdmin" xml:space="preserve"><value>هل تريد إزالة صلاحية الأدمن عن ({0})؟</value></data>
+  <data name="Offers_ViewTitle" xml:space="preserve"><value>العروض - EventRescue</value></data>
+  <data name="Offers_Badge" xml:space="preserve"><value>عروض مزودي الخدمة</value></data>
+  <data name="Offers_PageTitle" xml:space="preserve"><value>كل العروض</value></data>
+  <data name="Offers_Subtitle" xml:space="preserve"><value>كل العروض المقدمة على طلبات العملاء.</value></data>
+  <data name="Offers_ColRequest" xml:space="preserve"><value>الطلب</value></data>
+  <data name="Offers_ColProvider" xml:space="preserve"><value>مزود الخدمة</value></data>
+  <data name="Offers_ColPrice" xml:space="preserve"><value>السعر</value></data>
+  <data name="Offers_ColOfferDate" xml:space="preserve"><value>تاريخ العرض</value></data>
+  <data name="Offers_NoOffers" xml:space="preserve"><value>لا توجد عروض</value></data>
+  <data name="Offers_Pending" xml:space="preserve"><value>قيد الانتظار</value></data>
+  <data name="Offers_BackToDashboard" xml:space="preserve"><value>رجوع للداشبورد</value></data>
+  <data name="Req_ViewTitle" xml:space="preserve"><value>الطلبات - EventRescue</value></data>
+  <data name="Req_Badge" xml:space="preserve"><value>إدارة الطلبات</value></data>
+  <data name="Req_PageTitle" xml:space="preserve"><value>كل الطلبات</value></data>
+  <data name="Req_Subtitle" xml:space="preserve"><value>عرض كل الطلبات مع إمكانية الفلترة حسب الحالة.</value></data>
+  <data name="Req_FilterAvailable" xml:space="preserve"><value>متاحة</value></data>
+  <data name="Req_FilterAccepted" xml:space="preserve"><value>مقبولة</value></data>
+  <data name="Req_FilterCompleted" xml:space="preserve"><value>مكتملة</value></data>
+  <data name="Req_FilterCanceled" xml:space="preserve"><value>ملغاة</value></data>
+  <data name="Layout_Home" xml:space="preserve"><value>الرئيسية</value></data>
+  <data name="Layout_AvailableRequests" xml:space="preserve"><value>الطلبات المتاحة</value></data>
+  <data name="Layout_MyTasks" xml:space="preserve"><value>مهامي</value></data>
+  <data name="Layout_EmergencyToday" xml:space="preserve"><value>طوارئ اليوم</value></data>
+  <data name="Layout_IHaveEvent" xml:space="preserve"><value>عندي مناسبة</value></data>
+  <data name="Layout_MyRequests" xml:space="preserve"><value>طلباتي</value></data>
+  <data name="Layout_Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Layout_Profile" xml:space="preserve"><value>الملف الشخصي</value></data>
+  <data name="Layout_Logout" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="Layout_Login" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Layout_CreateAccount" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="Layout_Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Layout_LangArabicLabel" xml:space="preserve"><value>العربية</value></data>
+  <data name="Layout_LangEnglishLabel" xml:space="preserve"><value>الإنجليزية</value></data>
+</root>

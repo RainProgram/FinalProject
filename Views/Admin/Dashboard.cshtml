@@ -1,7 +1,11 @@
 @model EventRescue.Models.AdminDashboardViewModel
+@using Microsoft.Extensions.Localization
+@using EventRescue
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "لوحة الإدارة - EventRescue";
+    ViewData["Title"] = Localizer["Dash_ViewTitle"];
+  
 }
 
 <style>
@@ -12,6 +16,14 @@
 
     .er-page {
         direction: rtl;
+    }
+
+    .er-page[dir="ltr"] {
+        direction: ltr;
+    }
+
+    .er-page[dir="ltr"] .er-table thead th {
+        text-align: left;
     }
 
     .er-hero {
@@ -183,7 +195,7 @@
     }
 </style>
 
-<div class="container er-page mt-4 mb-5">
+<div class="container er-page mt-4 mb-5" dir="rtl">
 
     @* ================== الهيرو ================== *@
     <section class="er-hero mb-4">
@@ -192,17 +204,17 @@
                 <div class="col-lg-8">
                     <div class="er-badge">
                         <i class="bi bi-speedometer2"></i>
-                        لوحة الإدارة
+                        @Localizer["Dash_Badge"]
                     </div>
-                    <h1 class="er-title">إحصائيات الإدارة</h1>
+                    <h1 class="er-title">@Localizer["Dash_Title"]</h1>
                     <p class="er-subtitle mb-0">
-                        نظرة عامة على أداء المنصة والمستخدمين والطلبات الحالية.
+                        @Localizer["Dash_Subtitle"]
                     </p>
                 </div>
-                <div class="col-lg-4 text-lg-start text-center mt-4 mt-lg-0">
+                <div class="col-lg-4 text-lg-end text-center mt-4 mt-lg-0">
                     <a asp-controller="Admin" asp-action="ManageUsers" class="btn btn-primary er-btn">
                         <i class="bi bi-people"></i>
-                        إدارة المستخدمين
+                        @Localizer["Dash_ManageUsersBtn"]
                     </a>
                 </div>
             </div>
@@ -212,7 +224,7 @@
     @* ================== إحصائيات المستخدمين ================== *@
     <div class="er-section-title">
         <span class="er-soft-icon"><i class="bi bi-people-fill"></i></span>
-        <span>إحصائيات المستخدمين</span>
+        <span>@Localizer["Dash_UserStatsSection"]</span>
     </div>
 
     <div class="row g-3 mb-2">
@@ -221,7 +233,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#f1f5f9; color:#334155;"><i class="bi bi-people"></i></span>
                     <div class="er-stat-number">@Model.TotalUsers</div>
-                    <div class="er-muted small fw-bold">إجمالي المستخدمين</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_TotalUsers"]</div>
                 </div>
             </a>
         </div>
@@ -230,7 +242,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#e0f2fe; color:#0369a1;"><i class="bi bi-person-heart"></i></span>
                     <div class="er-stat-number">@Model.TotalClients</div>
-                    <div class="er-muted small fw-bold">المستفيدون</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_Clients"]</div>
                 </div>
             </a>
         </div>
@@ -239,7 +251,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#eff6ff; color:#2563eb;"><i class="bi bi-briefcase"></i></span>
                     <div class="er-stat-number">@Model.TotalProviders</div>
-                    <div class="er-muted small fw-bold">مزودو الخدمة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_Providers"]</div>
                 </div>
             </a>
         </div>
@@ -248,7 +260,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#fee2e2; color:#991b1b;"><i class="bi bi-person-x"></i></span>
                     <div class="er-stat-number">@Model.BlockedUsers</div>
-                    <div class="er-muted small fw-bold">الحسابات المحظورة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_BlockedUsers"]</div>
                 </div>
             </a>
         </div>
@@ -257,7 +269,7 @@
     @* ================== مؤشرات الطلبات والعروض ================== *@
     <div class="er-section-title">
         <span class="er-soft-icon"><i class="bi bi-clipboard-data-fill"></i></span>
-        <span>مؤشرات حركة الطلبات والعروض</span>
+        <span>@Localizer["Dash_RequestsMetricsSection"]</span>
     </div>
 
     <div class="row g-3 mb-4">
@@ -266,7 +278,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#f1f5f9; color:#334155;"><i class="bi bi-folder2-open"></i></span>
                     <div class="er-stat-number">@Model.TotalRequests</div>
-                    <div class="er-muted small fw-bold">إجمالي الطلبات</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_TotalRequests"]</div>
                 </div>
             </a>
         </div>
@@ -275,7 +287,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#fff7ed; color:#c2410c;"><i class="bi bi-hourglass-split"></i></span>
                     <div class="er-stat-number">@Model.PendingRequests</div>
-                    <div class="er-muted small fw-bold">طلبات متاحة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_PendingRequests"]</div>
                 </div>
             </a>
         </div>
@@ -284,7 +296,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#e0f2fe; color:#0369a1;"><i class="bi bi-hand-thumbs-up"></i></span>
                     <div class="er-stat-number">@Model.AcceptedRequests</div>
-                    <div class="er-muted small fw-bold">طلبات مقبولة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_AcceptedRequests"]</div>
                 </div>
             </a>
         </div>
@@ -293,7 +305,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#dcfce7; color:#166534;"><i class="bi bi-check2-circle"></i></span>
                     <div class="er-stat-number">@Model.CompletedRequests</div>
-                    <div class="er-muted small fw-bold">طلبات مكتملة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_CompletedRequests"]</div>
                 </div>
             </a>
         </div>
@@ -302,7 +314,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#fee2e2; color:#991b1b;"><i class="bi bi-dash-circle"></i></span>
                     <div class="er-stat-number">@Model.CanceledRequests</div>
-                    <div class="er-muted small fw-bold">طلبات ملغاة</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_CanceledRequests"]</div>
                 </div>
             </a>
         </div>
@@ -311,7 +323,7 @@
                 <div class="er-stat text-center">
                     <span class="er-soft-icon" style="background:#eff6ff; color:#2563eb;"><i class="bi bi-tags"></i></span>
                     <div class="er-stat-number">@Model.TotalOffers</div>
-                    <div class="er-muted small fw-bold">إجمالي العروض</div>
+                    <div class="er-muted small fw-bold">@Localizer["Dash_TotalOffers"]</div>
                 </div>
             </a>
         </div>
@@ -320,7 +332,7 @@
     @* ================== آخر الطلبات ================== *@
     <div class="er-section-title">
         <span class="er-soft-icon"><i class="bi bi-clipboard-data-fill"></i></span>
-        <span>آخر طلبات</span>
+        <span>@Localizer["Dash_RecentRequestsSection"]</span>
     </div>
 
     <div class="er-card er-card-body">
@@ -328,20 +340,20 @@
             <table class="er-table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>العنوان</th>
-                        <th>العميل</th>
-                        <th>القسم</th>
-                        <th>المنطقة</th>
-                        <th>الحالة</th>
-                        <th>تاريخ الإنشاء</th>
+                        <th>@Localizer["Common_Hash"]</th>
+                        <th>@Localizer["Common_Title"]</th>
+                        <th>@Localizer["Common_Client"]</th>
+                        <th>@Localizer["Common_Category"]</th>
+                        <th>@Localizer["Common_Region"]</th>
+                        <th>@Localizer["Common_Status"]</th>
+                        <th>@Localizer["Common_CreatedAt"]</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (!Model.RecentRequests.Any())
                     {
                         <tr>
-                            <td colspan="7" class="er-empty">لا توجد طلبات</td>
+                            <td colspan="7" class="er-empty">@Localizer["Dash_NoRequests"]</td>
                         </tr>
                     }
                     else
@@ -350,10 +362,10 @@
                         {
                             string statusText = req.Status switch
                             {
-                                EventRescue.Models.Enums.EventStatus.Pending => "متاح للعروض",
-                                EventRescue.Models.Enums.EventStatus.Accepted => "مقبول",
-                                EventRescue.Models.Enums.EventStatus.Completed => "مكتمل",
-                                EventRescue.Models.Enums.EventStatus.Canceled => "ملغي",
+                                EventRescue.Models.Enums.EventStatus.Pending => Localizer["Status_Pending"],
+                                EventRescue.Models.Enums.EventStatus.Accepted => Localizer["Status_Accepted"],
+                                EventRescue.Models.Enums.EventStatus.Completed => Localizer["Status_Completed"],
+                                EventRescue.Models.Enums.EventStatus.Canceled => Localizer["Status_Canceled"],
                                 _ => req.Status.ToString()
                             };
 
@@ -394,7 +406,7 @@
     <div class="mt-4 d-flex justify-content-center">
         <a asp-controller="Admin" asp-action="ManageUsers" class="btn btn-outline-primary er-btn px-4">
             <i class="bi bi-arrow-left"></i>
-            إدارة المستخدمين
+            @Localizer["Dash_ManageUsersBtn"]
         </a>
     </div>
 
